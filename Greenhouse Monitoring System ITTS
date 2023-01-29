@@ -1,0 +1,136 @@
+#include <stdio.h>
+
+#include <time.h>
+
+#include <stdlib.h>
+
+
+void updateInventory(char * itemName, int quantity, char * date) {
+  FILE * fp = fopen("equipment_inventory.txt", "a"); // open file in append mode
+  fprintf(fp, "Item: %s, Quantity: %d, date: %s \n", itemName, quantity, date); // update inventory with new item and quantity
+  fclose(fp);
+}
+
+void checkInventory() {
+  char inventoryData[255];
+  FILE * fp = fopen("equipment_inventory.txt", "r");
+  if (fp == NULL) {
+    printf("Inventory file not found\n");
+  } else {
+    printf("Inventory:\n");
+    while (fgets(inventoryData, sizeof(inventoryData), fp)) {
+      printf("%s", inventoryData);
+    }
+    fclose(fp);
+  }
+}
+
+int main() {
+  int choice;
+  int plantsMenuChoice;
+  int equipmentMenuChoice;
+  FILE * fp;
+  char date[20];
+  do {
+    printf("\033[1;31mGreenhouse Monitoring System\033[0m\n");
+    printf("1. \033[1;32mPlants Menu\033[0m\n");
+    printf("2. \033[1;34mEquipment Menu\033[0m\n");
+    printf("4. \033[1;35mExit\033[0m\n");
+    printf("Enter your choice: ");
+    scanf("%d", & choice);
+    switch (choice) {
+    case 1:
+      // Plants Menu
+      do {
+        system("cls");
+        printf("Plants Menu\n");
+        printf("1. Plant Health Monitoring\n");
+        printf("2. View last watered date\n");
+        printf("3. Update last watered date\n");
+        printf("4. Go Back\n");
+        printf("Enter your choice: ");
+
+        scanf("%d", & plantsMenuChoice);
+        switch (plantsMenuChoice) {
+        case 1:
+          // Plant Health Monitoring
+          srand(time(NULL));
+          int healthCheck = rand() % 2;
+          if (healthCheck == 0) {
+            printf("Plants are healthy\n");
+          } else {
+            printf("Plants are unhealthy\n");
+          }
+          break;
+        case 2:
+          // View last watered date
+          fp = fopen("last_watered_date.txt", "r");
+          if (fp == NULL) {
+            printf("Date not found\n");
+          } else {
+            fscanf(fp, "%s", date);
+            printf("Last watered date: %s\n", date);
+            fclose(fp);
+          }
+          break;
+        case 3:
+          // Update last watered date
+          printf("Enter the new last watered date (dd-mm-yyyy): ");
+          scanf("%s", date);
+          fp = fopen("last_watered_date.txt", "w");
+          fprintf(fp, "%s", date);
+          fclose(fp);
+          printf("Last watered date updated\n");
+          break;
+        case 4:
+          printf("Going back to main menu\n");
+          break;
+        default:
+          printf("Invalid choice\n");
+        }
+      } while (plantsMenuChoice != 4);
+      break;
+      // Equipment Menu
+      do {
+        printf("Equipment Menu\n");
+        printf("1. Check inventory\n");
+        printf("2. Inventory updates\n");
+        printf("3. Go back\n");
+        printf("Enter your choice: ");
+        scanf("%d", & equipmentMenuChoice);
+        switch (equipmentMenuChoice) {
+        case 1:
+          checkInventory();
+          break;
+        case 2:
+          // code for inventory updates
+          printf("Updating inventory...\n");
+          char item[20];
+          int qty;
+          char date[20];
+          printf("Enter the item name: ");
+          scanf("%s", item);
+          printf("Enter the quantity: ");
+          scanf("%d", & qty);
+          printf("Enter the date(dd-mm-yyyy): ");
+          scanf("%s", date);
+          updateInventory(item, qty, date);
+          break;
+        case 3:
+          printf("Going back to main menu\n");
+          break;
+        default:
+          printf("Invalid choice\n");
+        }
+      } while (equipmentMenuChoice != 3);
+      break;
+
+    case 4:
+      printf("Exiting Greenhouse Monitoring System\n");
+      break;
+    default:
+      printf("Invalid choice\n");
+    }
+  } while (choice != 4);
+  return 0;
+}

@@ -99,18 +99,18 @@ Sistem akan mengisinya saat Anda menggunakan aplikasi.
 
 ### Validasi Data
 Sistem mencakup validasi untuk:
-- ✅ Format tanggal (dd-mm-yyyy)
-- ✅ Nilai numerik (jumlah, harga, pengukuran)
-- ✅ Field yang diperlukan
-- ✅ Izin dan akses file
+- Format tanggal (dd-mm-yyyy)
+- Nilai numerik (jumlah, harga, pengukuran)
+- Field yang diperlukan
+- Izin dan akses file
 
 ## Rekomendasi Backup
 
 Selalu backup file data Anda sebelum:
-- 🔄 Update sistem
-- 🧹 Operasi pembersihan
-- 🔧 Perubahan konfigurasi besar
-- 📊 Impor data besar
+- Update sistem
+- Operasi pembersihan
+- Perubahan konfigurasi besar
+- Impor data besar
 
 ```bash
 # Buat direktori backup
@@ -120,4 +120,4 @@ mkdir backup_$(date +%Y%m%d)
 cp *.txt backup_$(date +%Y%m%d)/
 ```
 
-Selamat monitoring greenhouse! 🌱
+Selamat monitoring greenhouse!

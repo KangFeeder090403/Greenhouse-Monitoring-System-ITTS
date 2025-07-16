@@ -1,31 +1,31 @@
-# 🌱 Sistem Monitoring Greenhouse ITTS
+# Sistem Monitoring Greenhouse ITTS
 
 Sistem monitoring dan manajemen greenhouse yang komprehensif ditulis dalam bahasa C yang membantu Anda melacak kesehatan tanaman, kondisi lingkungan, dan inventaris peralatan.
 
-## 🌟 Fitur
+## Fitur
 
-### 🌿 Manajemen Tanaman
+### Manajemen Tanaman
 - **Monitoring Kesehatan Tanaman Real-time**: Simulasi pembacaan sensor untuk suhu, kelembaban, dan kelembapan tanah
 - **Penilaian Kesehatan**: Evaluasi otomatis kondisi tanaman dengan feedback berkode warna
 - **Jadwal Penyiraman**: Lacak dan perbarui tanggal terakhir disiram
 - **Statistik Tanaman**: Lihat data historis dan rata-rata kondisi lingkungan
 - **Pencatatan Data**: Tambah dan simpan data tanaman untuk analisis
 
-### 🔧 Manajemen Peralatan
+### Manajemen Peralatan
 - **Pelacakan Inventaris**: Sistem manajemen inventaris yang komprehensif
 - **Pencarian Item**: Fungsi pencarian cepat untuk item inventaris
 - **Pelacakan Harga**: Monitor biaya peralatan dan nilai total inventaris
 - **Laporan Inventaris**: Buat ringkasan inventaris yang detail
 - **Pelacakan Tanggal**: Lacak kapan item ditambahkan atau diperbarui
 
-### 💡 Fitur Tambahan
+### Fitur Tambahan
 - **Interface Ramah Pengguna**: Sistem menu yang berwarna dan intuitif
 - **Validasi Input**: Penanganan error yang kuat dan validasi input
 - **Lintas Platform**: Bekerja di Windows, Linux, dan macOS
 - **Penyimpanan Berbasis File**: Penyimpanan data persisten menggunakan file teks
 - **Penanganan Tanggal Otomatis**: Integrasi tanggal saat ini
 
-## 🚀 Memulai
+## Memulai
 
 ### Prasyarat
 - Compiler GCC (MinGW di Windows)
@@ -57,7 +57,7 @@ Sistem monitoring dan manajemen greenhouse yang komprehensif ditulis dalam bahas
    ./greenhouse_monitoring
    ```
 
-## 📖 Panduan Penggunaan
+## Panduan Penggunaan
 
 ### Menu Utama
 Sistem menyediakan lima pilihan utama:
@@ -103,7 +103,7 @@ Sistem menyediakan lima pilihan utama:
 - Stok minimal
 - Tanggal ditambahkan/diperbarui
 
-## 🗂️ Struktur File
+## Struktur File
 
 ```
 Greenhouse-Monitoring-System-ITTS/
@@ -121,16 +121,16 @@ Greenhouse-Monitoring-System-ITTS/
 └── notifikasi.txt              # Notifikasi sistem (generated)
 ```
 
-## 🎨 Antarmuka Pengguna
+## Antarmuka Pengguna
 
 Sistem ini menampilkan antarmuka yang intuitif dengan:
-- 🌱 Opsi menu yang jelas
-- ✅ Indikator sukses
-- ⚠️ Pesan peringatan
-- ❌ Notifikasi error
-- 📊 Elemen visualisasi data
+- Opsi menu yang jelas
+- Indikator sukses
+- Pesan peringatan
+- Notifikasi error
+- Elemen visualisasi data
 
-## 🔧 Detail Teknis
+## Detail Teknis
 
 ### Penyimpanan Data
 - **File Teks**: Semua data disimpan dalam file teks yang dapat dibaca manusia
@@ -148,45 +148,45 @@ Sistem ini menampilkan antarmuka yang intuitif dengan:
 - Linux/macOS: Menggunakan `clear` untuk membersihkan layar
 - Fungsi pustaka C standar untuk kompatibilitas maksimum
 
-## 🚧 Perbaikan dari Versi Asli
+## Perbaikan dari Versi Asli
 
 ### Kualitas Kode
-- ✅ Memperbaiki bug struktur menu (case 2 yang hilang)
-- ✅ Menambahkan penanganan error yang tepat
-- ✅ Implementasi validasi input
-- ✅ Desain fungsi modular
-- ✅ Format kode yang konsisten
-- ✅ Antarmuka bahasa Indonesia
+- Memperbaiki bug struktur menu (case 2 yang hilang)
+- Menambahkan penanganan error yang tepat
+- Implementasi validasi input
+- Desain fungsi modular
+- Format kode yang konsisten
+- Antarmuka bahasa Indonesia
 
 ### Fitur Baru
-- ✅ Statistik tanaman dan pencatatan data
-- ✅ Manajemen inventaris lanjutan
-- ✅ Fungsi pencarian
-- ✅ Pelaporan inventaris
-- ✅ Pelacakan harga
-- ✅ Penanganan tanggal otomatis
-- ✅ Sistem notifikasi dan peringatan
-- ✅ Monitoring kesehatan real-time
+- Statistik tanaman dan pencatatan data
+- Manajemen inventaris lanjutan
+- Fungsi pencarian
+- Pelaporan inventaris
+- Pelacakan harga
+- Penanganan tanggal otomatis
+- Sistem notifikasi dan peringatan
+- Monitoring kesehatan real-time
 
 ### Pengalaman Pengguna
-- ✅ Navigasi menu yang diperbaiki
-- ✅ Antarmuka yang lebih bersih
-- ✅ Pesan error yang lebih baik
-- ✅ Feedback validasi input
-- ✅ Indikator kemajuan
+- Navigasi menu yang diperbaiki
+- Antarmuka yang lebih bersih
+- Pesan error yang lebih baik
+- Feedback validasi input
+- Indikator kemajuan
 
-## 🔮 Pengembangan Masa Depan
+## Pengembangan Masa Depan
 
-- [ ] Integrasi database (SQLite)
-- [ ] Konektivitas jaringan untuk monitoring jarak jauh
-- [ ] Integrasi sensor nyata
-- [ ] Dashboard berbasis web
-- [ ] Aplikasi pendamping mobile
-- [ ] Notifikasi dan peringatan otomatis
-- [ ] Ekspor data ke CSV/Excel
-- [ ] Dukungan multi-bahasa
+- Integrasi database (SQLite)
+- Konektivitas jaringan untuk monitoring jarak jauh
+- Integrasi sensor nyata
+- Dashboard berbasis web
+- Aplikasi pendamping mobile
+- Notifikasi dan peringatan otomatis
+- Ekspor data ke CSV/Excel
+- Dukungan multi-bahasa
 
-## 🤝 Kontribusi
+## Kontribusi
 
 1. Fork repository
 2. Buat branch fitur (`git checkout -b feature/FiturMenarik`)
@@ -194,23 +194,23 @@ Sistem ini menampilkan antarmuka yang intuitif dengan:
 4. Push ke branch (`git push origin feature/FiturMenarik`)
 5. Buka Pull Request
 
-## 📝 Lisensi
+## Lisensi
 
 Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detail.
 
-## 👨‍💻 Pengembang
+## Pengembang
 
 **KangFeeder090403**
 - GitHub: [@KangFeeder090403](https://github.com/KangFeeder090403)
 - Email: dukungan@itts-greenhouse.com
 
-## 🙏 Terima Kasih
+## Terima Kasih
 
 Terima kasih telah menggunakan Sistem Monitoring Greenhouse ITTS!
-Semoga sistem ini membantu Anda dalam mengelola greenhouse dengan lebih efektif. 🌱
+Semoga sistem ini membantu Anda dalam mengelola greenhouse dengan lebih efektif.
 
 ---
-*Dibuat dengan ❤️ untuk komunitas greenhouse Indonesia*
+*Dibuat dengan cinta untuk komunitas greenhouse Indonesia*
 
 ## 📞 Support
 

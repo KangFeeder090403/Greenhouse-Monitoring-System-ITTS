@@ -1,0 +1,10 @@
+Tanaman_Tomat_1 Tomat 24.5 62.0 55.0 850 15-07-2025 10-07-2025 88
+Kebun_Kemangi Kemangi 22.8 58.0 48.0 920 16-07-2025 05-07-2025 82
+Semak_Mawar_1 Mawar 26.2 65.0 52.0 780 14-07-2025 01-07-2025 85
+Bedengan_Selada_A Selada 21.5 70.0 62.0 650 16-07-2025 12-07-2025 89
+Tanaman_Cabai_Merah Cabai 25.8 60.0 50.0 900 15-07-2025 08-07-2025 86
+Pot_Mint_Dapur Mint 23.2 64.0 58.0 720 16-07-2025 11-07-2025 84
+Hidroponik_Bayam Bayam 20.8 68.0 65.0 680 15-07-2025 13-07-2025 87
+Tanaman_Brokoli_B1 Brokoli 22.0 66.0 60.0 710 14-07-2025 09-07-2025 83
+Kebun_Peterseli Peterseli 24.1 59.0 52.0 890 16-07-2025 06-07-2025 85
+Pot_Cabe_Rawit Cabe_Rawit 26.5 58.0 48.0 930 15-07-2025 07-07-2025 81

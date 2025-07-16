@@ -1,194 +1,216 @@
-# 🌱 Greenhouse Monitoring System ITTS
+# 🌱 Sistem Monitoring Greenhouse ITTS
 
-A comprehensive greenhouse monitoring and management system written in C that helps you track plant health, environmental conditions, and equipment inventory.
+Sistem monitoring dan manajemen greenhouse yang komprehensif ditulis dalam bahasa C yang membantu Anda melacak kesehatan tanaman, kondisi lingkungan, dan inventaris peralatan.
 
-## 🌟 Features
+## 🌟 Fitur
 
-### 🌿 Plant Management
-- **Real-time Plant Health Monitoring**: Simulates sensor readings for temperature, humidity, and soil moisture
-- **Health Assessment**: Automated evaluation of plant conditions with color-coded feedback
-- **Watering Schedule**: Track and update last watered dates
-- **Plant Statistics**: View historical data and average environmental conditions
-- **Data Logging**: Add and store plant data for analysis
+### 🌿 Manajemen Tanaman
+- **Monitoring Kesehatan Tanaman Real-time**: Simulasi pembacaan sensor untuk suhu, kelembaban, dan kelembapan tanah
+- **Penilaian Kesehatan**: Evaluasi otomatis kondisi tanaman dengan feedback berkode warna
+- **Jadwal Penyiraman**: Lacak dan perbarui tanggal terakhir disiram
+- **Statistik Tanaman**: Lihat data historis dan rata-rata kondisi lingkungan
+- **Pencatatan Data**: Tambah dan simpan data tanaman untuk analisis
 
-### 🔧 Equipment Management
-- **Inventory Tracking**: Comprehensive inventory management system
-- **Item Search**: Quick search functionality for inventory items
-- **Price Tracking**: Monitor equipment costs and total inventory value
-- **Inventory Reports**: Generate detailed inventory summaries
-- **Date Tracking**: Track when items were added or updated
+### 🔧 Manajemen Peralatan
+- **Pelacakan Inventaris**: Sistem manajemen inventaris yang komprehensif
+- **Pencarian Item**: Fungsi pencarian cepat untuk item inventaris
+- **Pelacakan Harga**: Monitor biaya peralatan dan nilai total inventaris
+- **Laporan Inventaris**: Buat ringkasan inventaris yang detail
+- **Pelacakan Tanggal**: Lacak kapan item ditambahkan atau diperbarui
 
-### 💡 Additional Features
-- **User-Friendly Interface**: Colorful, intuitive menu system
-- **Input Validation**: Robust error handling and input validation
-- **Cross-Platform**: Works on Windows, Linux, and macOS
-- **File-Based Storage**: Persistent data storage using text files
-- **Automated Date Handling**: Current date integration
+### 💡 Fitur Tambahan
+- **Interface Ramah Pengguna**: Sistem menu yang berwarna dan intuitif
+- **Validasi Input**: Penanganan error yang kuat dan validasi input
+- **Lintas Platform**: Bekerja di Windows, Linux, dan macOS
+- **Penyimpanan Berbasis File**: Penyimpanan data persisten menggunakan file teks
+- **Penanganan Tanggal Otomatis**: Integrasi tanggal saat ini
 
-## 🚀 Getting Started
+## 🚀 Memulai
 
-### Prerequisites
-- GCC compiler (MinGW on Windows)
-- C99 standard support
+### Prasyarat
+- Compiler GCC (MinGW di Windows)
+- Dukungan standar C99
 
-### Installation
+### Instalasi
 
-1. **Clone the repository**:
+1. **Clone repository**:
    ```bash
    git clone https://github.com/KangFeeder090403/Greenhouse-Monitoring-System-ITTS.git
    cd Greenhouse-Monitoring-System-ITTS
    ```
 
-2. **Compile the program**:
+2. **Kompilasi program**:
    ```bash
-   # Using Makefile (recommended)
+   # Menggunakan Makefile (direkomendasikan)
    make
 
-   # Or compile manually
+   # Atau kompilasi manual
    gcc -Wall -Wextra -std=c99 -o greenhouse_monitoring greenhouse_monitoring.c
    ```
 
-3. **Run the program**:
+3. **Jalankan program**:
    ```bash
-   # Using Makefile
+   # Menggunakan Makefile
    make run
 
-   # Or run directly
+   # Atau jalankan langsung
    ./greenhouse_monitoring
    ```
 
-## 📖 Usage Guide
+## 📖 Panduan Penggunaan
 
-### Main Menu
-The system provides three main options:
-1. **Plants Management** - Monitor and manage plant health
-2. **Equipment Management** - Track and manage greenhouse equipment
-3. **Exit** - Close the application
+### Menu Utama
+Sistem menyediakan lima pilihan utama:
+1. **Manajemen Tanaman** - Monitor dan kelola kesehatan tanaman
+2. **Manajemen Peralatan** - Lacak dan kelola peralatan greenhouse
+3. **Notifikasi & Peringatan** - Lihat pemberitahuan sistem
+4. **Pengaturan Sistem** - Konfigurasi dan perawatan
+5. **Keluar** - Tutup aplikasi
 
-### Plant Management Features
+### Fitur Manajemen Tanaman
 
-#### Health Monitoring
-- Displays simulated environmental readings
-- Provides health assessment based on optimal ranges:
-  - Temperature: 20-30°C (optimal)
-  - Humidity: 50-70% (optimal)
-  - Soil Moisture: 40-70% (optimal)
+#### Monitoring Kesehatan
+- Menampilkan pembacaan lingkungan tersimulasi
+- Memberikan penilaian kesehatan berdasarkan rentang optimal:
+  - Suhu: 20-28°C (optimal)
+  - Kelembaban: 50-70% (optimal)
+  - Kelembapan Tanah: 40-70% (optimal)
+  - Intensitas Cahaya: 500-1500 lux (optimal)
 
-#### Watering Management
-- View last watered date
-- Update watering records
-- Automatic date validation
+#### Manajemen Penyiraman
+- Lihat tanggal terakhir disiram
+- Perbarui catatan penyiraman
+- Validasi tanggal otomatis
 
-#### Plant Statistics
-- View all recorded plant data
-- Calculate average environmental conditions
-- Historical data analysis
+#### Statistik Tanaman
+- Lihat semua data tanaman yang tercatat
+- Hitung rata-rata kondisi lingkungan
+- Analisis data historis
 
-### Equipment Management Features
+### Fitur Manajemen Peralatan
 
-#### Inventory Operations
-- Add new items with quantity and price
-- View complete inventory list
-- Search for specific items
-- Generate comprehensive reports
+#### Operasi Inventaris
+- Tambah item baru dengan jumlah dan harga
+- Lihat daftar inventaris lengkap
+- Cari item tertentu
+- Buat laporan komprehensif
 
-#### Data Fields
-- Item name
-- Quantity
-- Price per unit
-- Date added/updated
+#### Field Data
+- Nama item
+- Jumlah
+- Harga per unit
+- Kategori
+- Stok minimal
+- Tanggal ditambahkan/diperbarui
 
-## 🗂️ File Structure
+## 🗂️ Struktur File
 
 ```
 Greenhouse-Monitoring-System-ITTS/
-├── greenhouse_monitoring.c     # Main source code
-├── Makefile                   # Build configuration
-├── README.md                  # Documentation
-├── environment.yml            # Conda environment (optional)
-├── equipment_inventory.txt    # Inventory data (generated)
-├── last_watered_date.txt     # Watering records (generated)
-└── plant_data.txt            # Plant statistics (generated)
+├── greenhouse_system_advanced.c  # Kode sumber utama (versi lengkap)
+├── greenhouse_monitoring.c       # Kode sumber dasar
+├── Makefile                      # Konfigurasi build
+├── build.bat                     # Script build Windows
+├── README.md                     # Dokumentasi
+├── DOCS.md                       # Dokumentasi teknis
+├── SAMPLE_DATA.md               # Contoh data
+├── environment.yml              # Environment Conda (opsional)
+├── data_inventaris.txt          # Data inventaris (generated)
+├── tanggal_siram.txt           # Catatan penyiraman (generated)
+├── data_tanaman.txt            # Statistik tanaman (generated)
+└── notifikasi.txt              # Notifikasi sistem (generated)
 ```
 
-## 🎨 User Interface
+## 🎨 Antarmuka Pengguna
 
-The system features a colorful, intuitive interface with:
-- 🌱 Color-coded menu options
-- ✅ Success indicators
-- ⚠️ Warning messages
-- ❌ Error notifications
-- 📊 Data visualization elements
+Sistem ini menampilkan antarmuka yang intuitif dengan:
+- 🌱 Opsi menu yang jelas
+- ✅ Indikator sukses
+- ⚠️ Pesan peringatan
+- ❌ Notifikasi error
+- 📊 Elemen visualisasi data
 
-## 🔧 Technical Details
+## 🔧 Detail Teknis
 
-### Data Storage
-- **Text Files**: All data is stored in human-readable text files
-- **Persistent Storage**: Data survives program restarts
-- **Portable Format**: Easy to backup and transfer
+### Penyimpanan Data
+- **File Teks**: Semua data disimpan dalam file teks yang dapat dibaca manusia
+- **Penyimpanan Persisten**: Data bertahan setelah program ditutup
+- **Format Portabel**: Mudah untuk backup dan transfer
 
-### Input Validation
-- Date format validation (dd-mm-yyyy)
-- Numeric input verification
-- Buffer overflow protection
-- Error handling for file operations
+### Validasi Input
+- Validasi format tanggal (dd-mm-yyyy)
+- Verifikasi input numerik
+- Perlindungan buffer overflow
+- Penanganan error untuk operasi file
 
-### Cross-Platform Compatibility
-- Windows: Uses `cls` for screen clearing
-- Linux/macOS: Uses `clear` for screen clearing
-- Standard C library functions for maximum compatibility
+### Kompatibilitas Lintas Platform
+- Windows: Menggunakan `cls` untuk membersihkan layar
+- Linux/macOS: Menggunakan `clear` untuk membersihkan layar
+- Fungsi pustaka C standar untuk kompatibilitas maksimum
 
-## 🚧 Improvements from Original
+## 🚧 Perbaikan dari Versi Asli
 
-### Code Quality
-- ✅ Fixed menu structure bug (missing case 2)
-- ✅ Added proper error handling
-- ✅ Implemented input validation
-- ✅ Modular function design
-- ✅ Consistent code formatting
+### Kualitas Kode
+- ✅ Memperbaiki bug struktur menu (case 2 yang hilang)
+- ✅ Menambahkan penanganan error yang tepat
+- ✅ Implementasi validasi input
+- ✅ Desain fungsi modular
+- ✅ Format kode yang konsisten
+- ✅ Antarmuka bahasa Indonesia
 
-### New Features
-- ✅ Plant statistics and data logging
-- ✅ Advanced inventory management
-- ✅ Search functionality
-- ✅ Inventory reporting
-- ✅ Price tracking
-- ✅ Automated date handling
+### Fitur Baru
+- ✅ Statistik tanaman dan pencatatan data
+- ✅ Manajemen inventaris lanjutan
+- ✅ Fungsi pencarian
+- ✅ Pelaporan inventaris
+- ✅ Pelacakan harga
+- ✅ Penanganan tanggal otomatis
+- ✅ Sistem notifikasi dan peringatan
+- ✅ Monitoring kesehatan real-time
 
-### User Experience
-- ✅ Improved menu navigation
-- ✅ Color-coded interface
-- ✅ Better error messages
-- ✅ Input validation feedback
-- ✅ Progress indicators
+### Pengalaman Pengguna
+- ✅ Navigasi menu yang diperbaiki
+- ✅ Antarmuka yang lebih bersih
+- ✅ Pesan error yang lebih baik
+- ✅ Feedback validasi input
+- ✅ Indikator kemajuan
 
-## 🔮 Future Enhancements
+## 🔮 Pengembangan Masa Depan
 
-- [ ] Database integration (SQLite)
-- [ ] Network connectivity for remote monitoring
-- [ ] Real sensor integration
-- [ ] Web-based dashboard
-- [ ] Mobile app companion
-- [ ] Automated alerts and notifications
-- [ ] Data export to CSV/Excel
-- [ ] Multi-language support
+- [ ] Integrasi database (SQLite)
+- [ ] Konektivitas jaringan untuk monitoring jarak jauh
+- [ ] Integrasi sensor nyata
+- [ ] Dashboard berbasis web
+- [ ] Aplikasi pendamping mobile
+- [ ] Notifikasi dan peringatan otomatis
+- [ ] Ekspor data ke CSV/Excel
+- [ ] Dukungan multi-bahasa
 
-## 🤝 Contributing
+## 🤝 Kontribusi
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork repository
+2. Buat branch fitur (`git checkout -b feature/FiturMenarik`)
+3. Commit perubahan Anda (`git commit -m 'Tambah FiturMenarik'`)
+4. Push ke branch (`git push origin feature/FiturMenarik`)
+5. Buka Pull Request
 
-## 📝 License
+## 📝 Lisensi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detail.
 
-## 👨‍💻 Author
+## 👨‍💻 Pengembang
 
 **KangFeeder090403**
 - GitHub: [@KangFeeder090403](https://github.com/KangFeeder090403)
+- Email: dukungan@itts-greenhouse.com
+
+## 🙏 Terima Kasih
+
+Terima kasih telah menggunakan Sistem Monitoring Greenhouse ITTS!
+Semoga sistem ini membantu Anda dalam mengelola greenhouse dengan lebih efektif. 🌱
+
+---
+*Dibuat dengan ❤️ untuk komunitas greenhouse Indonesia*
 
 ## 📞 Support
 

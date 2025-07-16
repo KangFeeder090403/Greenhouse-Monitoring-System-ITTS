@@ -1,20 +1,20 @@
 @echo off
-:: Enhanced Build Script for Greenhouse Monitoring System ITTS v2.0
-:: Windows Batch File for Easy Compilation and Execution
+:: Script Build yang Disempurnakan untuk Sistem Monitoring Greenhouse ITTS v2.0
+:: File Batch Windows untuk Kompilasi dan Eksekusi yang Mudah
 
 color 0A
 echo.
-echo ╔══════════════════════════════════════════════════════════════╗
-echo ║  🌱 GREENHOUSE MONITORING SYSTEM ITTS v2.0 - BUILD SCRIPT  ║
-echo ╚══════════════════════════════════════════════════════════════╝
+echo ════════════════════════════════════════════════════════════════
+echo   SISTEM MONITORING GREENHOUSE ITTS v2.0 - SCRIPT BUILD  
+echo ════════════════════════════════════════════════════════════════
 echo.
 
-:: Check if GCC is available
+:: Cek apakah GCC tersedia
 where gcc >nul 2>nul
 if %errorlevel% neq 0 (
-    echo ❌ Error: GCC compiler not found!
+    echo Error: Compiler GCC tidak ditemukan!
     echo.
-    echo 💡 Please install one of the following:
+    echo Silakan install salah satu dari berikut:
     echo    - MinGW-w64: https://www.mingw-w64.org/
     echo    - MSYS2: https://www.msys2.org/
     echo    - Dev-C++: https://www.bloodshed.net/devcpp.html
@@ -27,22 +27,22 @@ if %errorlevel% neq 0 (
 :menu
 cls
 echo.
-echo ╔══════════════════════════════════════════════════════════════╗
-echo ║              🌱 GREENHOUSE BUILD MENU 🌱                    ║
-echo ╚══════════════════════════════════════════════════════════════╝
+echo ════════════════════════════════════════════════════════════════
+echo               MENU BUILD GREENHOUSE INDONESIA                    
+echo ════════════════════════════════════════════════════════════════
 echo.
-echo  1. 🔨 Build Basic Version
-echo  2. 🚀 Build Advanced Version  
-echo  3. 🔧 Build Both Versions
-echo  4. ▶️  Run Basic Version
-echo  5. 🚀 Run Advanced Version
-echo  6. 🧹 Clean Build Files
-echo  7. 🗑️  Clean Data Files (⚠️  Destructive!)
-echo  8. 📋 Show System Info
-echo  9. ❓ Help
-echo  0. 🚪 Exit
+echo  1. Build Versi Dasar
+echo  2. Build Versi Lengkap (Indonesia)
+echo  3. Build Kedua Versi
+echo  4. Jalankan Versi Dasar
+echo  5. Jalankan Versi Lengkap
+echo  6. Bersihkan File Build
+echo  7. Bersihkan File Data (Hati-hati!)
+echo  8. Tampilkan Info Sistem
+echo  9. Bantuan
+echo  0. Keluar
 echo.
-set /p choice="Enter your choice (0-9): "
+set /p choice="Masukkan pilihan Anda (0-9): "
 
 if "%choice%"=="1" goto build_basic
 if "%choice%"=="2" goto build_advanced

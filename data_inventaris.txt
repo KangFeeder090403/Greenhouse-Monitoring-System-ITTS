@@ -1,0 +1,10 @@
+Item: Kaleng Penyiram | Kategori: Alat | Jumlah: 3 | Harga: Rp239900 | Stok Min: 1 | Tanggal: 16-07-2025
+Item: Pupuk NPK | Kategori: Pupuk | Jumlah: 10 | Harga: Rp127500 | Stok Min: 2 | Tanggal: 16-07-2025
+Item: Benih Tomat | Kategori: Benih | Jumlah: 25 | Harga: Rp44900 | Stok Min: 5 | Tanggal: 16-07-2025
+Item: Gunting Pangkas | Kategori: Alat | Jumlah: 2 | Harga: Rp344900 | Stok Min: 1 | Tanggal: 16-07-2025
+Item: Pot Tanaman 6 Inci | Kategori: Wadah | Jumlah: 15 | Harga: Rp52400 | Stok Min: 5 | Tanggal: 16-07-2025
+Item: pH Meter Tanah | Kategori: Instrumen | Jumlah: 1 | Harga: Rp689900 | Stok Min: 1 | Tanggal: 16-07-2025
+Item: Kompos Organik | Kategori: Pupuk | Jumlah: 8 | Harga: Rp194900 | Stok Min: 3 | Tanggal: 16-07-2025
+Item: Selang Air | Kategori: Alat | Jumlah: 2 | Harga: Rp175000 | Stok Min: 1 | Tanggal: 16-07-2025
+Item: Benih Cabai | Kategori: Benih | Jumlah: 30 | Harga: Rp39900 | Stok Min: 5 | Tanggal: 16-07-2025
+Item: Media Tanam Cocopeat | Kategori: Media | Jumlah: 12 | Harga: Rp85000 | Stok Min: 3 | Tanggal: 16-07-2025

@@ -1,0 +1,10 @@
+15-07-2025 14:30:22|Kesehatan|Monitoring kesehatan tanaman selesai - semua sistem normal|1
+16-07-2025 08:15:45|Penyiraman|Penyiraman dicatat untuk Tanaman_Tomat_1 pada 16-07-2025|1
+16-07-2025 09:22:10|Inventaris|Peringatan stok rendah: Kompos Organik (3 unit tersisa)|2
+16-07-2025 10:45:33|Tanaman|Tanaman baru ditambahkan: Bedengan_Selada_A (Selada)|1
+16-07-2025 11:20:18|Kesehatan|Kondisi optimal terdeteksi di zona greenhouse 1|1
+16-07-2025 13:45:22|Penyiraman|Penyiraman dicatat untuk Kebun_Kemangi pada 16-07-2025|1
+16-07-2025 14:12:55|Inventaris|Stok benih tomat hampir habis, perlu pembelian ulang|2
+16-07-2025 15:30:18|Kesehatan|Suhu greenhouse mencapai 28°C - ventilasi aktif|2
+16-07-2025 16:05:44|Tanaman|Tanaman mint baru ditambahkan ke sistem|1
+16-07-2025 17:22:11|Inventaris|pH meter tanah perlu kalibrasi|1

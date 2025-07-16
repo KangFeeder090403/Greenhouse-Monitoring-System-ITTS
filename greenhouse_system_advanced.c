@@ -4,654 +4,654 @@
 #include <time.h>
 #include <ctype.h>
 
-// Constants
-#define MAX_STRING_LENGTH 100
-#define MAX_PLANTS 50
-#define MAX_EQUIPMENT 100
-#define FILENAME_INVENTORY "equipment_inventory.txt"
-#define FILENAME_WATERED_DATE "last_watered_date.txt"
-#define FILENAME_PLANT_DATA "plant_data.txt"
-#define FILENAME_ALERTS "alerts.txt"
+// Konstanta sistem
+#define PANJANG_STRING_MAX 100
+#define TANAMAN_MAX 50
+#define PERALATAN_MAX 100
+#define FILE_INVENTARIS "data_inventaris.txt"
+#define FILE_TERAKHIR_DISIRAM "tanggal_siram.txt"
+#define FILE_DATA_TANAMAN "data_tanaman.txt"
+#define FILE_NOTIFIKASI "notifikasi.txt"
 
-// Structures
+// Struktur data sistem
 typedef struct {
-    char name[MAX_STRING_LENGTH];
-    int quantity;
-    char date[MAX_STRING_LENGTH];
-    float price;
-    char category[MAX_STRING_LENGTH];
-    int minStock;
-} InventoryItem;
-
-typedef struct {
-    char plantName[MAX_STRING_LENGTH];
-    char plantType[MAX_STRING_LENGTH];
-    float temperature;
-    float humidity;
-    float soilMoisture;
-    float lightLevel;
-    char lastWatered[MAX_STRING_LENGTH];
-    char plantedDate[MAX_STRING_LENGTH];
-    int healthScore;
-} PlantData;
+    char nama[PANJANG_STRING_MAX];
+    int jumlah;
+    char tanggal[PANJANG_STRING_MAX];
+    float harga;
+    char kategori[PANJANG_STRING_MAX];
+    int stokMinimal;
+} ItemInventaris;
 
 typedef struct {
-    char alertType[MAX_STRING_LENGTH];
-    char message[MAX_STRING_LENGTH];
-    char timestamp[MAX_STRING_LENGTH];
-    int priority; // 1=Low, 2=Medium, 3=High
-} Alert;
+    char namaTanaman[PANJANG_STRING_MAX];
+    char jenisTanaman[PANJANG_STRING_MAX];
+    float suhu;
+    float kelembaban;
+    float kelembapanTanah;
+    float intensitasCahaya;
+    char terakhirDisiram[PANJANG_STRING_MAX];
+    char tanggalTanam[PANJANG_STRING_MAX];
+    int skorKesehatan;
+} DataTanaman;
 
-// Function prototypes
-void displayMainMenu();
-void displayPlantsMenu();
-void displayEquipmentMenu();
-void displaySettingsMenu();
-void clearScreen();
-void pressEnterToContinue();
-void displayWelcomeScreen();
+typedef struct {
+    char jenisNotifikasi[PANJANG_STRING_MAX];
+    char pesan[PANJANG_STRING_MAX];
+    char waktu[PANJANG_STRING_MAX];
+    int prioritas; // 1=Rendah, 2=Sedang, 3=Tinggi
+} Notifikasi;
 
-// Plant monitoring functions
-void plantHealthMonitoring();
-void viewLastWateredDate();
-void updateLastWateredDate();
-void viewPlantStatistics();
-void addPlantData();
-void viewAllPlants();
-void deletePlantData();
-void plantCareReminders();
+// Deklarasi fungsi utama
+void tampilkanMenuUtama();
+void tampilkanMenuTanaman();
+void tampilkanMenuPeralatan();
+void tampilkanMenuPengaturan();
+void bersihkanLayar();
+void tekanEnterUntukLanjut();
+void tampilkanLayarSelamatDatang();
 
-// Equipment functions
-void checkInventory();
-void updateInventory();
-void searchInventoryItem();
-void generateInventoryReport();
-void deleteInventoryItem();
-void lowStockAlert();
-void inventoryStatistics();
+// Fungsi monitoring tanaman
+void pantauKesehatanTanaman();
+void lihatTanggalTerakhirDisiram();
+void perbaruiTanggalSiram();
+void lihatStatistikTanaman();
+void tambahDataTanaman();
+void lihatSemuaTanaman();
+void hapusDataTanaman();
+void pengingatPerawatan();
 
-// Alert system
-void checkAlerts();
-void addAlert(const char* type, const char* message, int priority);
-void viewAlerts();
-void clearAlerts();
+// Fungsi peralatan
+void cekInventaris();
+void perbaruiInventaris();
+void cariItemInventaris();
+void buatLaporanInventaris();
+void hapusItemInventaris();
+void notifikasiStokRendah();
+void statistikInventaris();
 
-// Settings and utilities
-void systemSettings();
-void exportData();
-void importData();
+// Sistem notifikasi
+void cekNotifikasi();
+void tambahNotifikasi(const char* jenis, const char* pesan, int prioritas);
+void lihatNotifikasi();
+void hapusNotifikasi();
+
+// Pengaturan dan utilitas
+void pengaturanSistem();
+void eksporData();
+void imporData();
 void backupData();
-void aboutSystem();
+void tentangSistem();
 
-// Utility functions
-void getCurrentDate(char *dateStr);
-void getCurrentDateTime(char *dateTimeStr);
-int validateDate(const char *date);
-void displayHeader(const char *title);
-void displaySubHeader(const char *subtitle);
-float generateSensorReading(float min, float max);
-int calculateHealthScore(float temp, float humidity, float soilMoisture, float light);
-void trimString(char *str);
+// Fungsi utilitas
+void dapatkanTanggalSaatIni(char *stringTanggal);
+void dapatkanWaktuSaatIni(char *stringWaktu);
+int validasiTanggal(const char *tanggal);
+void tampilkanHeader(const char *judul);
+void tampilkanSubHeader(const char *subjudul);
+float buatPembacaanSensor(float min, float max);
+int hitungSkorKesehatan(float suhu, float kelembaban, float kelembapanTanah, float cahaya);
+void bersihkanString(char *str);
 
 int main() {
-    int choice;
+    int pilihan;
     
-    displayWelcomeScreen();
+    tampilkanLayarSelamatDatang();
     
     do {
-        clearScreen();
-        displayMainMenu();
+        bersihkanLayar();
+        tampilkanMenuUtama();
         
-        printf("Enter your choice (1-5): ");
-        if (scanf("%d", &choice) != 1) {
-            printf("❌ Invalid input! Please enter a number.\n");
-            while (getchar() != '\n'); // Clear input buffer
-            pressEnterToContinue();
+        printf("Masukkan pilihan Anda (1-5): ");
+        if (scanf("%d", &pilihan) != 1) {
+            printf("Input tidak valid! Harap masukkan angka.\n");
+            while (getchar() != '\n'); // Bersihkan buffer input
+            tekanEnterUntukLanjut();
             continue;
         }
         
-        switch (choice) {
+        switch (pilihan) {
             case 1: {
-                // Plants Management
-                int plantsChoice;
+                // Manajemen Tanaman
+                int pilihanTanaman;
                 do {
-                    clearScreen();
-                    displayPlantsMenu();
-                    printf("Enter your choice (1-9): ");
+                    bersihkanLayar();
+                    tampilkanMenuTanaman();
+                    printf("Masukkan pilihan Anda (1-9): ");
                     
-                    if (scanf("%d", &plantsChoice) != 1) {
-                        printf("❌ Invalid input! Please enter a number.\n");
+                    if (scanf("%d", &pilihanTanaman) != 1) {
+                        printf("Input tidak valid! Harap masukkan angka.\n");
                         while (getchar() != '\n');
-                        pressEnterToContinue();
+                        tekanEnterUntukLanjut();
                         continue;
                     }
                     
-                    switch (plantsChoice) {
-                        case 1: plantHealthMonitoring(); break;
-                        case 2: viewLastWateredDate(); break;
-                        case 3: updateLastWateredDate(); break;
-                        case 4: viewPlantStatistics(); break;
-                        case 5: addPlantData(); break;
-                        case 6: viewAllPlants(); break;
-                        case 7: deletePlantData(); break;
-                        case 8: plantCareReminders(); break;
-                        case 9: printf("🔙 Returning to main menu...\n"); break;
+                    switch (pilihanTanaman) {
+                        case 1: pantauKesehatanTanaman(); break;
+                        case 2: lihatTanggalTerakhirDisiram(); break;
+                        case 3: perbaruiTanggalSiram(); break;
+                        case 4: lihatStatistikTanaman(); break;
+                        case 5: tambahDataTanaman(); break;
+                        case 6: lihatSemuaTanaman(); break;
+                        case 7: hapusDataTanaman(); break;
+                        case 8: pengingatPerawatan(); break;
+                        case 9: printf("Kembali ke menu utama...\n"); break;
                         default:
-                            printf("❌ Invalid choice! Please enter a number between 1-9.\n");
-                            pressEnterToContinue();
+                            printf("Pilihan tidak valid! Masukkan angka antara 1-9.\n");
+                            tekanEnterUntukLanjut();
                     }
-                } while (plantsChoice != 9);
+                } while (pilihanTanaman != 9);
                 break;
             }
             
             case 2: {
-                // Equipment Management
-                int equipmentChoice;
+                // Manajemen Peralatan
+                int pilihanPeralatan;
                 do {
-                    clearScreen();
-                    displayEquipmentMenu();
-                    printf("Enter your choice (1-8): ");
+                    bersihkanLayar();
+                    tampilkanMenuPeralatan();
+                    printf("Masukkan pilihan Anda (1-8): ");
                     
-                    if (scanf("%d", &equipmentChoice) != 1) {
-                        printf("❌ Invalid input! Please enter a number.\n");
+                    if (scanf("%d", &pilihanPeralatan) != 1) {
+                        printf("Input tidak valid! Harap masukkan angka.\n");
                         while (getchar() != '\n');
-                        pressEnterToContinue();
+                        tekanEnterUntukLanjut();
                         continue;
                     }
                     
-                    switch (equipmentChoice) {
-                        case 1: checkInventory(); break;
-                        case 2: updateInventory(); break;
-                        case 3: searchInventoryItem(); break;
-                        case 4: generateInventoryReport(); break;
-                        case 5: deleteInventoryItem(); break;
-                        case 6: lowStockAlert(); break;
-                        case 7: inventoryStatistics(); break;
-                        case 8: printf("🔙 Returning to main menu...\n"); break;
+                    switch (pilihanPeralatan) {
+                        case 1: cekInventaris(); break;
+                        case 2: perbaruiInventaris(); break;
+                        case 3: cariItemInventaris(); break;
+                        case 4: buatLaporanInventaris(); break;
+                        case 5: hapusItemInventaris(); break;
+                        case 6: notifikasiStokRendah(); break;
+                        case 7: statistikInventaris(); break;
+                        case 8: printf("Kembali ke menu utama...\n"); break;
                         default:
-                            printf("❌ Invalid choice! Please enter a number between 1-8.\n");
-                            pressEnterToContinue();
+                            printf("Pilihan tidak valid! Masukkan angka antara 1-8.\n");
+                            tekanEnterUntukLanjut();
                     }
-                } while (equipmentChoice != 8);
+                } while (pilihanPeralatan != 8);
                 break;
             }
             
             case 3:
-                // Alerts and Notifications
-                checkAlerts();
+                // Notifikasi dan Peringatan
+                cekNotifikasi();
                 break;
                 
             case 4: {
-                // System Settings
-                int settingsChoice;
+                // Pengaturan Sistem
+                int pilihanPengaturan;
                 do {
-                    clearScreen();
-                    displaySettingsMenu();
-                    printf("Enter your choice (1-6): ");
+                    bersihkanLayar();
+                    tampilkanMenuPengaturan();
+                    printf("Masukkan pilihan Anda (1-6): ");
                     
-                    if (scanf("%d", &settingsChoice) != 1) {
-                        printf("❌ Invalid input! Please enter a number.\n");
+                    if (scanf("%d", &pilihanPengaturan) != 1) {
+                        printf("Input tidak valid! Harap masukkan angka.\n");
                         while (getchar() != '\n');
-                        pressEnterToContinue();
+                        tekanEnterUntukLanjut();
                         continue;
                     }
                     
-                    switch (settingsChoice) {
-                        case 1: exportData(); break;
-                        case 2: importData(); break;
+                    switch (pilihanPengaturan) {
+                        case 1: eksporData(); break;
+                        case 2: imporData(); break;
                         case 3: backupData(); break;
-                        case 4: clearAlerts(); break;
-                        case 5: aboutSystem(); break;
-                        case 6: printf("🔙 Returning to main menu...\n"); break;
+                        case 4: hapusNotifikasi(); break;
+                        case 5: tentangSistem(); break;
+                        case 6: printf("Kembali ke menu utama...\n"); break;
                         default:
-                            printf("❌ Invalid choice! Please enter a number between 1-6.\n");
-                            pressEnterToContinue();
+                            printf("Pilihan tidak valid! Masukkan angka antara 1-6.\n");
+                            tekanEnterUntukLanjut();
                     }
-                } while (settingsChoice != 6);
+                } while (pilihanPengaturan != 6);
                 break;
             }
             
             case 5:
-                printf("\n🌱 \033[1;32mThank you for using Greenhouse Monitoring System ITTS!\033[0m\n");
-                printf("🌿 Keep your plants healthy and happy! 🌸\n");
-                printf("👋 Goodbye!\n\n");
+                printf("\nTerima kasih telah menggunakan Sistem Monitoring Greenhouse!\n");
+                printf("Semoga tanaman Anda selalu sehat dan subur!\n");
+                printf("Sampai jumpa!\n\n");
                 break;
                 
             default:
-                printf("❌ Invalid choice! Please enter a number between 1-5.\n");
-                pressEnterToContinue();
+                printf("Pilihan tidak valid! Masukkan angka antara 1-5.\n");
+                tekanEnterUntukLanjut();
         }
-    } while (choice != 5);
+    } while (pilihan != 5);
     
     return 0;
 }
 
-void displayWelcomeScreen() {
-    clearScreen();
+void tampilkanLayarSelamatDatang() {
+    bersihkanLayar();
     printf("\n");
-    printf("  ╔═══════════════════════════════════════════════════════════╗\n");
-    printf("  ║                                                           ║\n");
-    printf("  ║       🌱 \033[1;32mGREENHOUSE MONITORING SYSTEM ITTS\033[0m 🌱        ║\n");
-    printf("  ║                                                           ║\n");
-    printf("  ║              \033[1;36mAdvanced Plant & Equipment Manager\033[0m          ║\n");
-    printf("  ║                                                           ║\n");
-    printf("  ║  🌿 Monitor plant health in real-time                    ║\n");
-    printf("  ║  💧 Track watering schedules                             ║\n");
-    printf("  ║  📊 Manage equipment inventory                           ║\n");
-    printf("  ║  🔔 Receive smart notifications                          ║\n");
-    printf("  ║  📈 Analyze growth statistics                            ║\n");
-    printf("  ║                                                           ║\n");
-    printf("  ║              \033[1;33mVersion 2.0 - Enhanced Edition\033[0m             ║\n");
-    printf("  ║                                                           ║\n");
-    printf("  ╚═══════════════════════════════════════════════════════════╝\n");
+    printf("  ════════════════════════════════════════════════════════════\n");
+    printf("  ||                                                       ||\n");
+    printf("  ||       SISTEM MONITORING GREENHOUSE ITTS               ||\n");
+    printf("  ||                                                       ||\n");
+    printf("  ||           Pengelola Tanaman & Peralatan               ||\n");
+    printf("  ||                                                       ||\n");
+    printf("  ||  - Pantau kondisi tanaman secara real-time           ||\n");
+    printf("  ||  - Kelola jadwal penyiraman                          ||\n");
+    printf("  ||  - Atur inventaris peralatan                         ||\n");
+    printf("  ||  - Terima notifikasi penting                         ||\n");
+    printf("  ||  - Analisis statistik pertumbuhan                    ||\n");
+    printf("  ||                                                       ||\n");
+    printf("  ||              Versi 2.0 - Edisi Lengkap               ||\n");
+    printf("  ||                                                       ||\n");
+    printf("  ════════════════════════════════════════════════════════════\n");
     printf("\n");
-    printf("  🌟 Welcome to the future of greenhouse management!\n");
-    printf("  🚀 This system will help you create the perfect environment for your plants.\n");
+    printf("  Selamat datang di masa depan pengelolaan greenhouse!\n");
+    printf("  Sistem ini akan membantu Anda menciptakan lingkungan \n");
+    printf("  yang sempurna untuk tanaman.\n");
     printf("\n");
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void displayMainMenu() {
-    displayHeader("MAIN MENU");
-    printf("🌿 \033[1;32m1. Plants Management\033[0m      - Monitor and care for your plants\n");
-    printf("🔧 \033[1;34m2. Equipment Management\033[0m   - Manage tools and supplies\n");
-    printf("🔔 \033[1;33m3. Alerts & Notifications\033[0m - View system alerts\n");
-    printf("⚙️  \033[1;35m4. System Settings\033[0m        - Configure and maintain system\n");
-    printf("🚪 \033[1;31m5. Exit\033[0m                   - Close the application\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
+void tampilkanMenuUtama() {
+    tampilkanHeader("MENU UTAMA");
+    printf("1. Manajemen Tanaman       - Pantau dan rawat tanaman Anda\n");
+    printf("2. Manajemen Peralatan     - Kelola alat dan perlengkapan\n");
+    printf("3. Notifikasi & Peringatan - Lihat pemberitahuan sistem\n");
+    printf("4. Pengaturan Sistem       - Konfigurasi dan perawatan\n");
+    printf("5. Keluar                  - Tutup aplikasi\n");
+    printf("═══════════════════════════════════════════════════════════\n");
 }
 
-void displayPlantsMenu() {
-    displayHeader("PLANTS MANAGEMENT");
-    printf("🔬 1. Plant Health Monitoring     - Check environmental conditions\n");
-    printf("💧 2. View Last Watered Date      - See watering history\n");
-    printf("🗓️  3. Update Watering Record      - Log new watering\n");
-    printf("📊 4. Plant Statistics            - View growth data\n");
-    printf("➕ 5. Add New Plant              - Register new plant\n");
-    printf("👀 6. View All Plants             - Browse plant database\n");
-    printf("🗑️  7. Remove Plant               - Delete plant record\n");
-    printf("🔔 8. Care Reminders              - View plant care tasks\n");
-    printf("🔙 9. Back to Main Menu           - Return to main menu\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
+void tampilkanMenuTanaman() {
+    tampilkanHeader("MANAJEMEN TANAMAN");
+    printf("1. Pantau Kesehatan        - Cek kondisi lingkungan\n");
+    printf("2. Lihat Riwayat Siram     - Histori penyiraman\n");
+    printf("3. Catat Penyiraman        - Log penyiraman baru\n");
+    printf("4. Statistik Tanaman       - Data pertumbuhan\n");
+    printf("5. Tambah Tanaman Baru     - Daftarkan tanaman\n");
+    printf("6. Lihat Semua Tanaman     - Browse database tanaman\n");
+    printf("7. Hapus Data Tanaman      - Hapus record tanaman\n");
+    printf("8. Pengingat Perawatan     - Tugas perawatan\n");
+    printf("9. Kembali ke Menu Utama   - Kembali\n");
+    printf("═══════════════════════════════════════════════════════════\n");
 }
 
-void displayEquipmentMenu() {
-    displayHeader("EQUIPMENT MANAGEMENT");
-    printf("📋 1. View Inventory              - Show all equipment\n");
-    printf("➕ 2. Add/Update Equipment        - Manage equipment stock\n");
-    printf("🔍 3. Search Equipment            - Find specific items\n");
-    printf("📊 4. Inventory Report            - Generate detailed report\n");
-    printf("🗑️  5. Remove Equipment           - Delete inventory item\n");
-    printf("⚠️  6. Low Stock Alerts           - Check inventory warnings\n");
-    printf("📈 7. Inventory Statistics        - View usage analytics\n");
-    printf("🔙 8. Back to Main Menu           - Return to main menu\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
+void tampilkanMenuPeralatan() {
+    tampilkanHeader("MANAJEMEN PERALATAN");
+    printf("1. Lihat Inventaris        - Tampilkan semua peralatan\n");
+    printf("2. Tambah/Update Alat      - Kelola stok peralatan\n");
+    printf("3. Cari Peralatan          - Temukan item tertentu\n");
+    printf("4. Laporan Inventaris      - Buat laporan detail\n");
+    printf("5. Hapus Peralatan         - Hapus item inventaris\n");
+    printf("6. Notifikasi Stok Rendah  - Peringatan inventaris\n");
+    printf("7. Statistik Inventaris    - Analisis penggunaan\n");
+    printf("8. Kembali ke Menu Utama   - Kembali\n");
+    printf("═══════════════════════════════════════════════════════════\n");
 }
 
-void displaySettingsMenu() {
-    displayHeader("SYSTEM SETTINGS");
-    printf("📤 1. Export Data                 - Save data to external file\n");
-    printf("📥 2. Import Data                 - Load data from file\n");
-    printf("💾 3. Backup System               - Create system backup\n");
-    printf("🧹 4. Clear All Alerts           - Remove all notifications\n");
-    printf("ℹ️  5. About System               - System information\n");
-    printf("🔙 6. Back to Main Menu           - Return to main menu\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
+void tampilkanMenuPengaturan() {
+    tampilkanHeader("PENGATURAN SISTEM");
+    printf("1. Ekspor Data             - Simpan data ke file eksternal\n");
+    printf("2. Impor Data              - Muat data dari file\n");
+    printf("3. Backup Sistem           - Buat cadangan sistem\n");
+    printf("4. Hapus Semua Notifikasi  - Bersihkan pemberitahuan\n");
+    printf("5. Tentang Sistem          - Informasi sistem\n");
+    printf("6. Kembali ke Menu Utama   - Kembali\n");
+    printf("═══════════════════════════════════════════════════════════\n");
 }
 
-void plantHealthMonitoring() {
-    clearScreen();
-    displayHeader("PLANT HEALTH MONITORING");
+void pantauKesehatanTanaman() {
+    bersihkanLayar();
+    tampilkanHeader("MONITORING KESEHATAN TANAMAN");
     
-    printf("🔄 Collecting sensor data...\n");
-    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("Sedang mengumpulkan data sensor...\n");
+    printf("═══════════════════════════════════════════════════════════\n");
     
-    // Simulate realistic sensor readings
-    float temperature = generateSensorReading(18.0, 35.0);
-    float humidity = generateSensorReading(30.0, 90.0);
-    float soilMoisture = generateSensorReading(15.0, 85.0);
-    float lightLevel = generateSensorReading(200.0, 2000.0);
+    // Simulasi pembacaan sensor yang realistis
+    float suhu = buatPembacaanSensor(18.0, 35.0);
+    float kelembaban = buatPembacaanSensor(30.0, 90.0);
+    float kelembapanTanah = buatPembacaanSensor(15.0, 85.0);
+    float intensitasCahaya = buatPembacaanSensor(200.0, 2000.0);
     
-    printf("\n📊 CURRENT ENVIRONMENTAL CONDITIONS:\n");
-    printf("────────────────────────────────────────────────────────────────\n");
-    printf("🌡️  Temperature:    %.1f°C", temperature);
-    if (temperature >= 20.0 && temperature <= 28.0) printf(" ✅ Optimal");
-    else if (temperature < 15.0 || temperature > 35.0) printf(" ❌ Critical");
-    else printf(" ⚠️  Suboptimal");
+    printf("\nKONDISI LINGKUNGAN SAAT INI:\n");
+    printf("────────────────────────────────────────────────────────────\n");
+    printf("Suhu:           %.1f°C", suhu);
+    if (suhu >= 20.0 && suhu <= 28.0) printf(" [OPTIMAL]");
+    else if (suhu < 15.0 || suhu > 35.0) printf(" [KRITIS]");
+    else printf(" [PERLU PERHATIAN]");
     printf("\n");
     
-    printf("💨 Humidity:        %.1f%%", humidity);
-    if (humidity >= 50.0 && humidity <= 70.0) printf(" ✅ Optimal");
-    else if (humidity < 30.0 || humidity > 85.0) printf(" ❌ Critical");
-    else printf(" ⚠️  Suboptimal");
+    printf("Kelembaban:     %.1f%%", kelembaban);
+    if (kelembaban >= 50.0 && kelembaban <= 70.0) printf(" [OPTIMAL]");
+    else if (kelembaban < 30.0 || kelembaban > 85.0) printf(" [KRITIS]");
+    else printf(" [PERLU PERHATIAN]");
     printf("\n");
     
-    printf("💧 Soil Moisture:   %.1f%%", soilMoisture);
-    if (soilMoisture >= 40.0 && soilMoisture <= 70.0) printf(" ✅ Optimal");
-    else if (soilMoisture < 20.0 || soilMoisture > 80.0) printf(" ❌ Critical");
-    else printf(" ⚠️  Suboptimal");
+    printf("Kelembapan Tanah: %.1f%%", kelembapanTanah);
+    if (kelembapanTanah >= 40.0 && kelembapanTanah <= 70.0) printf(" [OPTIMAL]");
+    else if (kelembapanTanah < 20.0 || kelembapanTanah > 80.0) printf(" [KRITIS]");
+    else printf(" [PERLU PERHATIAN]");
     printf("\n");
     
-    printf("☀️  Light Level:     %.0f lux", lightLevel);
-    if (lightLevel >= 500.0 && lightLevel <= 1500.0) printf(" ✅ Optimal");
-    else if (lightLevel < 200.0 || lightLevel > 1800.0) printf(" ❌ Critical");
-    else printf(" ⚠️  Suboptimal");
+    printf("Intensitas Cahaya: %.0f lux", intensitasCahaya);
+    if (intensitasCahaya >= 500.0 && intensitasCahaya <= 1500.0) printf(" [OPTIMAL]");
+    else if (intensitasCahaya < 200.0 || intensitasCahaya > 1800.0) printf(" [KRITIS]");
+    else printf(" [PERLU PERHATIAN]");
     printf("\n");
     
-    // Calculate overall health score
-    int healthScore = calculateHealthScore(temperature, humidity, soilMoisture, lightLevel);
+    // Hitung skor kesehatan keseluruhan
+    int skorKesehatan = hitungSkorKesehatan(suhu, kelembaban, kelembapanTanah, intensitasCahaya);
     
-    printf("\n🏥 OVERALL PLANT HEALTH ASSESSMENT:\n");
-    printf("────────────────────────────────────────────────────────────────\n");
-    printf("Health Score: %d/100 ", healthScore);
+    printf("\nPENILAIAN KESEHATAN TANAMAN KESELURUHAN:\n");
+    printf("────────────────────────────────────────────────────────────\n");
+    printf("Skor Kesehatan: %d/100 ", skorKesehatan);
     
-    if (healthScore >= 85) {
-        printf("🌟 \033[1;32mEXCELLENT - Plants are thriving!\033[0m\n");
-        printf("🎉 Your greenhouse conditions are perfect!\n");
-    } else if (healthScore >= 70) {
-        printf("😊 \033[1;33mGOOD - Plants are healthy with minor areas for improvement\033[0m\n");
-        printf("👍 Most conditions are favorable for plant growth.\n");
-    } else if (healthScore >= 50) {
-        printf("😐 \033[1;33mFAIR - Some conditions need attention\033[0m\n");
-        printf("⚠️  Consider adjusting environmental controls.\n");
+    if (skorKesehatan >= 85) {
+        printf("SANGAT BAIK - Tanaman berkembang pesat!\n");
+        printf("Kondisi greenhouse Anda sangat sempurna!\n");
+    } else if (skorKesehatan >= 70) {
+        printf("BAIK - Tanaman sehat dengan sedikit perbaikan\n");
+        printf("Sebagian besar kondisi mendukung pertumbuhan.\n");
+    } else if (skorKesehatan >= 50) {
+        printf("CUKUP - Beberapa kondisi perlu perhatian\n");
+        printf("Pertimbangkan untuk menyesuaikan kontrol lingkungan.\n");
     } else {
-        printf("😟 \033[1;31mPOOR - Immediate action required!\033[0m\n");
-        printf("🚨 Multiple conditions are outside optimal ranges.\n");
-        addAlert("Health", "Critical plant health conditions detected", 3);
+        printf("BURUK - Diperlukan tindakan segera!\n");
+        printf("Beberapa kondisi di luar rentang optimal.\n");
+        tambahNotifikasi("Kesehatan", "Kondisi kesehatan tanaman kritis terdeteksi", 3);
     }
     
-    printf("\n💡 RECOMMENDATIONS:\n");
-    printf("────────────────────────────────────────────────────────────────\n");
-    if (temperature < 20.0) printf("🔥 Increase heating - temperature too low\n");
-    if (temperature > 28.0) printf("❄️  Increase ventilation - temperature too high\n");
-    if (humidity < 50.0) printf("💦 Increase humidity - air too dry\n");
-    if (humidity > 70.0) printf("🌬️  Improve ventilation - humidity too high\n");
-    if (soilMoisture < 40.0) printf("🚿 Water plants - soil too dry\n");
-    if (soilMoisture > 70.0) printf("⏸️  Reduce watering - soil too wet\n");
-    if (lightLevel < 500.0) printf("💡 Increase lighting - insufficient light\n");
-    if (lightLevel > 1500.0) printf("🕶️  Reduce light intensity - too bright\n");
+    printf("\nREKOMENDASI:\n");
+    printf("────────────────────────────────────────────────────────────\n");
+    if (suhu < 20.0) printf("- Tingkatkan pemanas - suhu terlalu rendah\n");
+    if (suhu > 28.0) printf("- Tingkatkan ventilasi - suhu terlalu tinggi\n");
+    if (kelembaban < 50.0) printf("- Tingkatkan kelembaban - udara terlalu kering\n");
+    if (kelembaban > 70.0) printf("- Perbaiki ventilasi - kelembaban terlalu tinggi\n");
+    if (kelembapanTanah < 40.0) printf("- Siram tanaman - tanah terlalu kering\n");
+    if (kelembapanTanah > 70.0) printf("- Kurangi penyiraman - tanah terlalu basah\n");
+    if (intensitasCahaya < 500.0) printf("- Tambah pencahayaan - cahaya kurang\n");
+    if (intensitasCahaya > 1500.0) printf("- Kurangi intensitas cahaya - terlalu terang\n");
     
-    // Save monitoring data
-    char currentDateTime[MAX_STRING_LENGTH];
-    getCurrentDateTime(currentDateTime);
+    // Simpan data monitoring
+    char waktuSaatIni[PANJANG_STRING_MAX];
+    dapatkanWaktuSaatIni(waktuSaatIni);
     
-    FILE *fp = fopen("monitoring_log.txt", "a");
+    FILE *fp = fopen("log_monitoring.txt", "a");
     if (fp != NULL) {
         fprintf(fp, "%s,%.1f,%.1f,%.1f,%.0f,%d\n", 
-                currentDateTime, temperature, humidity, soilMoisture, lightLevel, healthScore);
+                waktuSaatIni, suhu, kelembaban, kelembapanTanah, intensitasCahaya, skorKesehatan);
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void viewLastWateredDate() {
-    clearScreen();
-    displayHeader("WATERING HISTORY");
+void lihatTanggalTerakhirDisiram() {
+    bersihkanLayar();
+    tampilkanHeader("RIWAYAT PENYIRAMAN");
     
-    FILE *fp = fopen(FILENAME_WATERED_DATE, "r");
+    FILE *fp = fopen(FILE_TERAKHIR_DISIRAM, "r");
     if (fp == NULL) {
-        printf("❌ No watering records found.\n");
-        printf("💡 Tip: Update the watering record to start tracking.\n");
+        printf("Tidak ada catatan penyiraman ditemukan.\n");
+        printf("Tips: Perbarui catatan penyiraman untuk mulai melacak.\n");
     } else {
-        char date[MAX_STRING_LENGTH];
-        char plantName[MAX_STRING_LENGTH];
-        int recordCount = 0;
+        char tanggal[PANJANG_STRING_MAX];
+        char namaTanaman[PANJANG_STRING_MAX];
+        int jumlahCatatan = 0;
         
-        printf("📅 RECENT WATERING RECORDS:\n");
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("CATATAN PENYIRAMAN TERBARU:\n");
+        printf("════════════════════════════════════════════════════════════\n");
         
-        while (fscanf(fp, "%s %s", date, plantName) == 2) {
-            recordCount++;
-            printf("%d. 💧 %s - Last watered: %s\n", recordCount, plantName, date);
+        while (fscanf(fp, "%s %s", tanggal, namaTanaman) == 2) {
+            jumlahCatatan++;
+            printf("%d. %s - Terakhir disiram: %s\n", jumlahCatatan, namaTanaman, tanggal);
         }
         
-        if (recordCount == 0) {
-            printf("📝 No watering records in file.\n");
+        if (jumlahCatatan == 0) {
+            printf("Tidak ada catatan penyiraman dalam file.\n");
         } else {
-            printf("\n📊 Total plants tracked: %d\n", recordCount);
-            printf("💡 Remember: Most plants need watering every 2-3 days.\n");
+            printf("\nTotal tanaman yang dicatat: %d\n", jumlahCatatan);
+            printf("Ingat: Kebanyakan tanaman perlu disiram setiap 2-3 hari.\n");
         }
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void updateLastWateredDate() {
-    clearScreen();
-    displayHeader("UPDATE WATERING RECORD");
+void perbaruiTanggalSiram() {
+    bersihkanLayar();
+    tampilkanHeader("PERBARUI CATATAN PENYIRAMAN");
     
-    char date[MAX_STRING_LENGTH];
-    char plantName[MAX_STRING_LENGTH];
-    char currentDate[MAX_STRING_LENGTH];
+    char tanggal[PANJANG_STRING_MAX];
+    char namaTanaman[PANJANG_STRING_MAX];
+    char tanggalHariIni[PANJANG_STRING_MAX];
     
-    getCurrentDate(currentDate);
-    printf("📅 Today's date: %s\n", currentDate);
-    printf("════════════════════════════════════════════════════════════════\n");
+    dapatkanTanggalSaatIni(tanggalHariIni);
+    printf("Tanggal hari ini: %s\n", tanggalHariIni);
+    printf("════════════════════════════════════════════════════════════\n");
     
-    printf("🌱 Enter plant name: ");
-    getchar(); // Clear input buffer
-    fgets(plantName, sizeof(plantName), stdin);
-    trimString(plantName);
+    printf("Masukkan nama tanaman: ");
+    getchar(); // Bersihkan buffer input
+    fgets(namaTanaman, sizeof(namaTanaman), stdin);
+    bersihkanString(namaTanaman);
     
-    printf("📅 Enter watering date (dd-mm-yyyy) or press Enter for today: ");
-    fgets(date, sizeof(date), stdin);
-    trimString(date);
+    printf("Masukkan tanggal penyiraman (dd-mm-yyyy) atau tekan Enter untuk hari ini: ");
+    fgets(tanggal, sizeof(tanggal), stdin);
+    bersihkanString(tanggal);
     
-    // If empty input, use current date
-    if (strlen(date) == 0) {
-        strcpy(date, currentDate);
+    // Jika input kosong, gunakan tanggal hari ini
+    if (strlen(tanggal) == 0) {
+        strcpy(tanggal, tanggalHariIni);
     }
     
-    if (validateDate(date)) {
-        FILE *fp = fopen(FILENAME_WATERED_DATE, "a");
+    if (validasiTanggal(tanggal)) {
+        FILE *fp = fopen(FILE_TERAKHIR_DISIRAM, "a");
         if (fp != NULL) {
-            fprintf(fp, "%s %s\n", date, plantName);
+            fprintf(fp, "%s %s\n", tanggal, namaTanaman);
             fclose(fp);
-            printf("✅ Watering record updated successfully!\n");
-            printf("💧 %s was watered on %s\n", plantName, date);
+            printf("Catatan penyiraman berhasil diperbarui!\n");
+            printf("%s telah disiram pada %s\n", namaTanaman, tanggal);
             
-            // Add success alert
-            char alertMsg[200];
-            sprintf(alertMsg, "Watering recorded for %s on %s", plantName, date);
-            addAlert("Watering", alertMsg, 1);
+            // Tambah notifikasi sukses
+            char pesanNotifikasi[200];
+            sprintf(pesanNotifikasi, "Penyiraman dicatat untuk %s pada %s", namaTanaman, tanggal);
+            tambahNotifikasi("Penyiraman", pesanNotifikasi, 1);
         } else {
-            printf("❌ Error updating watering record.\n");
+            printf("Error saat memperbarui catatan penyiraman.\n");
         }
     } else {
-        printf("❌ Invalid date format. Please use dd-mm-yyyy format.\n");
+        printf("Format tanggal tidak valid. Harap gunakan format dd-mm-yyyy.\n");
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void viewPlantStatistics() {
-    clearScreen();
-    displayHeader("PLANT STATISTICS");
+void lihatStatistikTanaman() {
+    bersihkanLayar();
+    tampilkanHeader("STATISTIK TANAMAN");
     
-    FILE *fp = fopen(FILENAME_PLANT_DATA, "r");
+    FILE *fp = fopen(FILE_DATA_TANAMAN, "r");
     if (fp == NULL) {
-        printf("📊 No plant data available.\n");
-        printf("💡 Add some plant data first to view detailed statistics.\n");
+        printf("Data tanaman tidak tersedia.\n");
+        printf("Tambahkan beberapa data tanaman terlebih dahulu untuk melihat statistik detail.\n");
     } else {
-        PlantData plant;
-        int count = 0;
-        float avgTemp = 0, avgHumidity = 0, avgSoilMoisture = 0, avgLight = 0;
-        int totalHealthScore = 0;
+        DataTanaman tanaman;
+        int jumlah = 0;
+        float rataRataSuhu = 0, rataRataKelembaban = 0, rataRataKelembapanTanah = 0, rataRataCahaya = 0;
+        int totalSkorKesehatan = 0;
         
-        printf("🌱 PLANT DATABASE RECORDS:\n");
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("CATATAN DATABASE TANAMAN:\n");
+        printf("════════════════════════════════════════════════════════════\n");
         
         while (fscanf(fp, "%s %s %f %f %f %f %s %s %d", 
-                      plant.plantName, plant.plantType, &plant.temperature, 
-                      &plant.humidity, &plant.soilMoisture, &plant.lightLevel,
-                      plant.lastWatered, plant.plantedDate, &plant.healthScore) == 9) {
-            count++;
-            printf("%d. 🌿 %s (%s)\n", count, plant.plantName, plant.plantType);
-            printf("   📊 Temp: %.1f°C | Humidity: %.1f%% | Soil: %.1f%% | Light: %.0flux\n",
-                   plant.temperature, plant.humidity, plant.soilMoisture, plant.lightLevel);
-            printf("   💧 Last watered: %s | 🌱 Planted: %s | ❤️  Health: %d/100\n\n",
-                   plant.lastWatered, plant.plantedDate, plant.healthScore);
+                      tanaman.namaTanaman, tanaman.jenisTanaman, &tanaman.suhu, 
+                      &tanaman.kelembaban, &tanaman.kelembapanTanah, &tanaman.intensitasCahaya,
+                      tanaman.terakhirDisiram, tanaman.tanggalTanam, &tanaman.skorKesehatan) == 9) {
+            jumlah++;
+            printf("%d. %s (%s)\n", jumlah, tanaman.namaTanaman, tanaman.jenisTanaman);
+            printf("   Suhu: %.1f°C | Kelembaban: %.1f%% | Tanah: %.1f%% | Cahaya: %.0flux\n",
+                   tanaman.suhu, tanaman.kelembaban, tanaman.kelembapanTanah, tanaman.intensitasCahaya);
+            printf("   Terakhir disiram: %s | Ditanam: %s | Kesehatan: %d/100\n\n",
+                   tanaman.terakhirDisiram, tanaman.tanggalTanam, tanaman.skorKesehatan);
             
-            avgTemp += plant.temperature;
-            avgHumidity += plant.humidity;
-            avgSoilMoisture += plant.soilMoisture;
-            avgLight += plant.lightLevel;
-            totalHealthScore += plant.healthScore;
+            rataRataSuhu += tanaman.suhu;
+            rataRataKelembaban += tanaman.kelembaban;
+            rataRataKelembapanTanah += tanaman.kelembapanTanah;
+            rataRataCahaya += tanaman.intensitasCahaya;
+            totalSkorKesehatan += tanaman.skorKesehatan;
         }
         
-        if (count > 0) {
-            avgTemp /= count;
-            avgHumidity /= count;
-            avgSoilMoisture /= count;
-            avgLight /= count;
-            int avgHealthScore = totalHealthScore / count;
+        if (jumlah > 0) {
+            rataRataSuhu /= jumlah;
+            rataRataKelembaban /= jumlah;
+            rataRataKelembapanTanah /= jumlah;
+            rataRataCahaya /= jumlah;
+            int rataRataSkorKesehatan = totalSkorKesehatan / jumlah;
             
-            printf("📈 GREENHOUSE AVERAGES:\n");
-            printf("════════════════════════════════════════════════════════════════\n");
-            printf("🌡️  Average Temperature: %.1f°C\n", avgTemp);
-            printf("💨 Average Humidity: %.1f%%\n", avgHumidity);
-            printf("💧 Average Soil Moisture: %.1f%%\n", avgSoilMoisture);
-            printf("☀️  Average Light Level: %.0f lux\n", avgLight);
-            printf("❤️  Average Health Score: %d/100\n", avgHealthScore);
-            printf("📊 Total Plants: %d\n", count);
+            printf("RATA-RATA GREENHOUSE:\n");
+            printf("════════════════════════════════════════════════════════════\n");
+            printf("Rata-rata Suhu: %.1f°C\n", rataRataSuhu);
+            printf("Rata-rata Kelembaban: %.1f%%\n", rataRataKelembaban);
+            printf("Rata-rata Kelembapan Tanah: %.1f%%\n", rataRataKelembapanTanah);
+            printf("Rata-rata Intensitas Cahaya: %.0f lux\n", rataRataCahaya);
+            printf("Rata-rata Skor Kesehatan: %d/100\n", rataRataSkorKesehatan);
+            printf("Total Tanaman: %d\n", jumlah);
         }
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void addPlantData() {
-    clearScreen();
-    displayHeader("ADD NEW PLANT");
+void tambahDataTanaman() {
+    bersihkanLayar();
+    tampilkanHeader("TAMBAH TANAMAN BARU");
     
-    PlantData plant;
-    char currentDate[MAX_STRING_LENGTH];
-    getCurrentDate(currentDate);
+    DataTanaman tanaman;
+    char tanggalSaatIni[PANJANG_STRING_MAX];
+    dapatkanTanggalSaatIni(tanggalSaatIni);
     
-    printf("🌱 Enter plant details:\n");
-    printf("════════════════════════════════════════════════════════════════\n");
+    printf("Masukkan detail tanaman:\n");
+    printf("════════════════════════════════════════════════════════════\n");
     
-    printf("📝 Plant name: ");
-    getchar(); // Clear input buffer
-    fgets(plant.plantName, sizeof(plant.plantName), stdin);
-    trimString(plant.plantName);
+    printf("Nama tanaman: ");
+    getchar(); // Bersihkan buffer input
+    fgets(tanaman.namaTanaman, sizeof(tanaman.namaTanaman), stdin);
+    bersihkanString(tanaman.namaTanaman);
     
-    printf("🏷️  Plant type (e.g., Tomato, Rose, Basil): ");
-    fgets(plant.plantType, sizeof(plant.plantType), stdin);
-    trimString(plant.plantType);
+    printf("Jenis tanaman (contoh: Tomat, Mawar, Kemangi): ");
+    fgets(tanaman.jenisTanaman, sizeof(tanaman.jenisTanaman), stdin);
+    bersihkanString(tanaman.jenisTanaman);
     
-    printf("🌡️  Current temperature (°C): ");
-    scanf("%f", &plant.temperature);
+    printf("Suhu saat ini (°C): ");
+    scanf("%f", &tanaman.suhu);
     
-    printf("💨 Current humidity (%%): ");
-    scanf("%f", &plant.humidity);
+    printf("Kelembaban saat ini (%%): ");
+    scanf("%f", &tanaman.kelembaban);
     
-    printf("💧 Current soil moisture (%%): ");
-    scanf("%f", &plant.soilMoisture);
+    printf("Kelembapan tanah saat ini (%%): ");
+    scanf("%f", &tanaman.kelembapanTanah);
     
-    printf("☀️  Current light level (lux): ");
-    scanf("%f", &plant.lightLevel);
+    printf("Intensitas cahaya saat ini (lux): ");
+    scanf("%f", &tanaman.intensitasCahaya);
     
-    strcpy(plant.lastWatered, currentDate);
-    strcpy(plant.plantedDate, currentDate);
+    strcpy(tanaman.terakhirDisiram, tanggalSaatIni);
+    strcpy(tanaman.tanggalTanam, tanggalSaatIni);
     
-    plant.healthScore = calculateHealthScore(plant.temperature, plant.humidity, 
-                                           plant.soilMoisture, plant.lightLevel);
+    tanaman.skorKesehatan = hitungSkorKesehatan(tanaman.suhu, tanaman.kelembaban, 
+                                           tanaman.kelembapanTanah, tanaman.intensitasCahaya);
     
-    FILE *fp = fopen(FILENAME_PLANT_DATA, "a");
+    FILE *fp = fopen(FILE_DATA_TANAMAN, "a");
     if (fp != NULL) {
         fprintf(fp, "%s %s %.1f %.1f %.1f %.0f %s %s %d\n", 
-                plant.plantName, plant.plantType, plant.temperature, plant.humidity,
-                plant.soilMoisture, plant.lightLevel, plant.lastWatered, 
-                plant.plantedDate, plant.healthScore);
+                tanaman.namaTanaman, tanaman.jenisTanaman, tanaman.suhu, tanaman.kelembaban,
+                tanaman.kelembapanTanah, tanaman.intensitasCahaya, tanaman.terakhirDisiram, 
+                tanaman.tanggalTanam, tanaman.skorKesehatan);
         fclose(fp);
         
-        printf("\n✅ Plant added successfully!\n");
-        printf("🌿 %s (%s) has been registered in your greenhouse.\n", 
-               plant.plantName, plant.plantType);
-        printf("❤️  Initial health score: %d/100\n", plant.healthScore);
+        printf("\nTanaman berhasil ditambahkan!\n");
+        printf("%s (%s) telah terdaftar di greenhouse Anda.\n", 
+               tanaman.namaTanaman, tanaman.jenisTanaman);
+        printf("Skor kesehatan awal: %d/100\n", tanaman.skorKesehatan);
         
-        // Add alert for new plant
-        char alertMsg[200];
-        sprintf(alertMsg, "New plant added: %s (%s)", plant.plantName, plant.plantType);
-        addAlert("Plant", alertMsg, 1);
+        // Tambah notifikasi untuk tanaman baru
+        char pesanNotifikasi[200];
+        sprintf(pesanNotifikasi, "Tanaman baru ditambahkan: %s (%s)", tanaman.namaTanaman, tanaman.jenisTanaman);
+        tambahNotifikasi("Tanaman", pesanNotifikasi, 1);
     } else {
-        printf("❌ Error adding plant data.\n");
+        printf("Error saat menambahkan data tanaman.\n");
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-// Additional function implementations would continue here...
-// For brevity, I'll implement the key utility functions:
+// Implementasi fungsi utilitas utama
 
-float generateSensorReading(float min, float max) {
+float buatPembacaanSensor(float min, float max) {
     srand(time(NULL) + rand());
     return min + (float)rand() / RAND_MAX * (max - min);
 }
 
-int calculateHealthScore(float temp, float humidity, float soilMoisture, float light) {
-    int score = 100;
+int hitungSkorKesehatan(float suhu, float kelembaban, float kelembapanTanah, float cahaya) {
+    int skor = 100;
     
-    // Temperature scoring (optimal: 20-28°C)
-    if (temp < 15.0 || temp > 35.0) score -= 30;
-    else if (temp < 20.0 || temp > 28.0) score -= 15;
+    // Skor suhu (optimal: 20-28°C)
+    if (suhu < 15.0 || suhu > 35.0) skor -= 30;
+    else if (suhu < 20.0 || suhu > 28.0) skor -= 15;
     
-    // Humidity scoring (optimal: 50-70%)
-    if (humidity < 30.0 || humidity > 85.0) score -= 25;
-    else if (humidity < 50.0 || humidity > 70.0) score -= 10;
+    // Skor kelembaban (optimal: 50-70%)
+    if (kelembaban < 30.0 || kelembaban > 85.0) skor -= 25;
+    else if (kelembaban < 50.0 || kelembaban > 70.0) skor -= 10;
     
-    // Soil moisture scoring (optimal: 40-70%)
-    if (soilMoisture < 20.0 || soilMoisture > 80.0) score -= 25;
-    else if (soilMoisture < 40.0 || soilMoisture > 70.0) score -= 10;
+    // Skor kelembapan tanah (optimal: 40-70%)
+    if (kelembapanTanah < 20.0 || kelembapanTanah > 80.0) skor -= 25;
+    else if (kelembapanTanah < 40.0 || kelembapanTanah > 70.0) skor -= 10;
     
-    // Light level scoring (optimal: 500-1500 lux)
-    if (light < 200.0 || light > 1800.0) score -= 20;
-    else if (light < 500.0 || light > 1500.0) score -= 10;
+    // Skor intensitas cahaya (optimal: 500-1500 lux)
+    if (cahaya < 200.0 || cahaya > 1800.0) skor -= 20;
+    else if (cahaya < 500.0 || cahaya > 1500.0) skor -= 10;
     
-    return (score < 0) ? 0 : score;
+    return (skor < 0) ? 0 : skor;
 }
 
-void getCurrentDate(char *dateStr) {
+void dapatkanTanggalSaatIni(char *stringTanggal) {
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    sprintf(dateStr, "%02d-%02d-%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+    sprintf(stringTanggal, "%02d-%02d-%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
 
-void getCurrentDateTime(char *dateTimeStr) {
+void dapatkanWaktuSaatIni(char *stringWaktu) {
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    sprintf(dateTimeStr, "%02d-%02d-%04d %02d:%02d:%02d", 
+    sprintf(stringWaktu, "%02d-%02d-%04d %02d:%02d:%02d", 
             tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900,
             tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
-int validateDate(const char *date) {
-    int day, month, year;
-    if (sscanf(date, "%d-%d-%d", &day, &month, &year) != 3) {
+int validasiTanggal(const char *tanggal) {
+    int hari, bulan, tahun;
+    if (sscanf(tanggal, "%d-%d-%d", &hari, &bulan, &tahun) != 3) {
         return 0;
     }
     
-    if (month < 1 || month > 12) return 0;
-    if (day < 1 || day > 31) return 0;
-    if (year < 1900 || year > 2100) return 0;
+    if (bulan < 1 || bulan > 12) return 0;
+    if (hari < 1 || hari > 31) return 0;
+    if (tahun < 1900 || tahun > 2100) return 0;
     
     return 1;
 }
 
-void displayHeader(const char *title) {
+void tampilkanHeader(const char *judul) {
     printf("\n");
-    printf("╔══════════════════════════════════════════════════════════════╗\n");
-    printf("║  \033[1;36m%-58s\033[0m  ║\n", title);
-    printf("╚══════════════════════════════════════════════════════════════╝\n");
+    printf("════════════════════════════════════════════════════════════\n");
+    printf("  %-56s  \n", judul);
+    printf("════════════════════════════════════════════════════════════\n");
 }
 
-void clearScreen() {
+void bersihkanLayar() {
     #ifdef _WIN32
         system("cls");
     #else
@@ -659,396 +659,396 @@ void clearScreen() {
     #endif
 }
 
-void pressEnterToContinue() {
-    printf("\n💡 Press Enter to continue...");
+void tekanEnterUntukLanjut() {
+    printf("\nTekan Enter untuk melanjutkan...");
     while (getchar() != '\n');
     getchar();
 }
 
-void trimString(char *str) {
-    char *end;
+void bersihkanString(char *str) {
+    char *akhir;
     
-    // Trim leading space
+    // Hapus spasi di awal
     while(isspace((unsigned char)*str)) str++;
     
-    // All spaces?
+    // Semua spasi?
     if(*str == 0) return;
     
-    // Trim trailing space
-    end = str + strlen(str) - 1;
-    while(end > str && isspace((unsigned char)*end)) end--;
+    // Hapus spasi di akhir
+    akhir = str + strlen(str) - 1;
+    while(akhir > str && isspace((unsigned char)*akhir)) akhir--;
     
-    // Write new null terminator
-    *(end+1) = 0;
+    // Tulis null terminator baru
+    *(akhir+1) = 0;
 }
 
-void addAlert(const char* type, const char* message, int priority) {
-    FILE *fp = fopen(FILENAME_ALERTS, "a");
+void tambahNotifikasi(const char* jenis, const char* pesan, int prioritas) {
+    FILE *fp = fopen(FILE_NOTIFIKASI, "a");
     if (fp != NULL) {
-        char timestamp[MAX_STRING_LENGTH];
-        getCurrentDateTime(timestamp);
-        fprintf(fp, "%s|%s|%s|%d\n", timestamp, type, message, priority);
+        char waktu[PANJANG_STRING_MAX];
+        dapatkanWaktuSaatIni(waktu);
+        fprintf(fp, "%s|%s|%s|%d\n", waktu, jenis, pesan, prioritas);
         fclose(fp);
     }
 }
 
-// Placeholder implementations for remaining functions
-void viewAllPlants() {
-    clearScreen();
-    displayHeader("ALL PLANTS");
-    printf("🚧 This feature is under development.\n");
-    printf("📊 Use 'Plant Statistics' for now to view plant data.\n");
-    pressEnterToContinue();
+// Implementasi fungsi-fungsi tambahan
+void lihatSemuaTanaman() {
+    bersihkanLayar();
+    tampilkanHeader("SEMUA TANAMAN");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    printf("Gunakan 'Statistik Tanaman' untuk sementara melihat data tanaman.\n");
+    tekanEnterUntukLanjut();
 }
 
-void deletePlantData() {
-    clearScreen();
-    displayHeader("REMOVE PLANT");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+void hapusDataTanaman() {
+    bersihkanLayar();
+    tampilkanHeader("HAPUS DATA TANAMAN");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void plantCareReminders() {
-    clearScreen();
-    displayHeader("CARE REMINDERS");
-    printf("🔔 PLANT CARE SCHEDULE:\n");
-    printf("════════════════════════════════════════════════════════════════\n");
-    printf("💧 Daily: Check soil moisture levels\n");
-    printf("🌱 Weekly: Inspect plants for pests and diseases\n");
-    printf("✂️  Monthly: Prune dead leaves and stems\n");
-    printf("🌿 Seasonally: Fertilize and repot as needed\n");
-    pressEnterToContinue();
+void pengingatPerawatan() {
+    bersihkanLayar();
+    tampilkanHeader("PENGINGAT PERAWATAN");
+    printf("JADWAL PERAWATAN TANAMAN:\n");
+    printf("════════════════════════════════════════════════════════════\n");
+    printf("Harian: Cek tingkat kelembapan tanah\n");
+    printf("Mingguan: Periksa tanaman dari hama dan penyakit\n");
+    printf("Bulanan: Potong daun dan batang yang mati\n");
+    printf("Musiman: Berikan pupuk dan repot sesuai kebutuhan\n");
+    tekanEnterUntukLanjut();
 }
 
-void checkInventory() {
-    clearScreen();
-    displayHeader("EQUIPMENT INVENTORY");
+void cekInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("INVENTARIS PERALATAN");
     
-    FILE *fp = fopen(FILENAME_INVENTORY, "r");
+    FILE *fp = fopen(FILE_INVENTARIS, "r");
     if (fp == NULL) {
-        printf("📦 No inventory data found.\n");
-        printf("💡 Add some equipment to start tracking inventory.\n");
+        printf("Data inventaris tidak ditemukan.\n");
+        printf("Tambahkan beberapa peralatan untuk mulai melacak inventaris.\n");
     } else {
-        char line[256];
-        int itemCount = 0;
+        char baris[256];
+        int jumlahItem = 0;
         
-        printf("📋 CURRENT INVENTORY:\n");
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("INVENTARIS SAAT INI:\n");
+        printf("════════════════════════════════════════════════════════════\n");
         
-        while (fgets(line, sizeof(line), fp)) {
-            itemCount++;
-            printf("%d. %s", itemCount, line);
+        while (fgets(baris, sizeof(baris), fp)) {
+            jumlahItem++;
+            printf("%d. %s", jumlahItem, baris);
         }
         
-        if (itemCount == 0) {
-            printf("📦 Inventory is empty.\n");
+        if (jumlahItem == 0) {
+            printf("Inventaris kosong.\n");
         } else {
-            printf("\n📊 Total items in inventory: %d\n", itemCount);
+            printf("\nTotal item dalam inventaris: %d\n", jumlahItem);
         }
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void updateInventory() {
-    clearScreen();
-    displayHeader("ADD/UPDATE EQUIPMENT");
+void perbaruiInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("TAMBAH/UPDATE PERALATAN");
     
-    InventoryItem item;
-    char currentDate[MAX_STRING_LENGTH];
-    getCurrentDate(currentDate);
+    ItemInventaris item;
+    char tanggalSaatIni[PANJANG_STRING_MAX];
+    dapatkanTanggalSaatIni(tanggalSaatIni);
     
-    printf("📦 Enter equipment details:\n");
-    printf("════════════════════════════════════════════════════════════════\n");
+    printf("Masukkan detail peralatan:\n");
+    printf("════════════════════════════════════════════════════════════\n");
     
-    printf("📝 Item name: ");
-    getchar(); // Clear input buffer
-    fgets(item.name, sizeof(item.name), stdin);
-    trimString(item.name);
+    printf("Nama item: ");
+    getchar(); // Bersihkan buffer input
+    fgets(item.nama, sizeof(item.nama), stdin);
+    bersihkanString(item.nama);
     
-    printf("🏷️  Category (e.g., Tools, Seeds, Fertilizers): ");
-    fgets(item.category, sizeof(item.category), stdin);
-    trimString(item.category);
+    printf("Kategori (contoh: Alat, Benih, Pupuk): ");
+    fgets(item.kategori, sizeof(item.kategori), stdin);
+    bersihkanString(item.kategori);
     
-    printf("📊 Quantity: ");
-    scanf("%d", &item.quantity);
+    printf("Jumlah: ");
+    scanf("%d", &item.jumlah);
     
-    printf("💰 Price per unit ($): ");
-    scanf("%f", &item.price);
+    printf("Harga per unit (Rp): ");
+    scanf("%f", &item.harga);
     
-    printf("⚠️  Minimum stock level: ");
-    scanf("%d", &item.minStock);
+    printf("Stok minimal: ");
+    scanf("%d", &item.stokMinimal);
     
-    strcpy(item.date, currentDate);
+    strcpy(item.tanggal, tanggalSaatIni);
     
-    FILE *fp = fopen(FILENAME_INVENTORY, "a");
+    FILE *fp = fopen(FILE_INVENTARIS, "a");
     if (fp != NULL) {
-        fprintf(fp, "Item: %s | Category: %s | Quantity: %d | Price: $%.2f | Min Stock: %d | Date: %s\n",
-                item.name, item.category, item.quantity, item.price, item.minStock, item.date);
+        fprintf(fp, "Item: %s | Kategori: %s | Jumlah: %d | Harga: Rp%.2f | Stok Min: %d | Tanggal: %s\n",
+                item.nama, item.kategori, item.jumlah, item.harga, item.stokMinimal, item.tanggal);
         fclose(fp);
         
-        printf("\n✅ Equipment added successfully!\n");
-        printf("📦 %s (%d units) added to %s category\n", 
-               item.name, item.quantity, item.category);
+        printf("\nPeralatan berhasil ditambahkan!\n");
+        printf("%s (%d unit) ditambahkan ke kategori %s\n", 
+               item.nama, item.jumlah, item.kategori);
         
-        // Check for low stock
-        if (item.quantity <= item.minStock) {
-            char alertMsg[200];
-            sprintf(alertMsg, "Low stock alert: %s (%d units remaining)", item.name, item.quantity);
-            addAlert("Inventory", alertMsg, 2);
+        // Cek stok rendah
+        if (item.jumlah <= item.stokMinimal) {
+            char pesanNotifikasi[200];
+            sprintf(pesanNotifikasi, "Peringatan stok rendah: %s (%d unit tersisa)", item.nama, item.jumlah);
+            tambahNotifikasi("Inventaris", pesanNotifikasi, 2);
         }
     } else {
-        printf("❌ Error updating inventory.\n");
+        printf("Error saat memperbarui inventaris.\n");
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void searchInventoryItem() {
-    clearScreen();
-    displayHeader("SEARCH EQUIPMENT");
+void cariItemInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("CARI PERALATAN");
     
-    char searchTerm[MAX_STRING_LENGTH];
-    char line[256];
-    int found = 0;
+    char kataCari[PANJANG_STRING_MAX];
+    char baris[256];
+    int ditemukan = 0;
     
-    printf("🔍 Enter item name or category to search: ");
-    getchar(); // Clear input buffer
-    fgets(searchTerm, sizeof(searchTerm), stdin);
-    trimString(searchTerm);
+    printf("Masukkan nama item atau kategori yang dicari: ");
+    getchar(); // Bersihkan buffer input
+    fgets(kataCari, sizeof(kataCari), stdin);
+    bersihkanString(kataCari);
     
-    FILE *fp = fopen(FILENAME_INVENTORY, "r");
+    FILE *fp = fopen(FILE_INVENTARIS, "r");
     if (fp == NULL) {
-        printf("❌ No inventory file found.\n");
+        printf("File inventaris tidak ditemukan.\n");
     } else {
-        printf("\n🔍 SEARCH RESULTS:\n");
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("\nHASIL PENCARIAN:\n");
+        printf("════════════════════════════════════════════════════════════\n");
         
-        while (fgets(line, sizeof(line), fp)) {
-            if (strstr(line, searchTerm) != NULL) {
-                printf("✅ %s", line);
-                found++;
+        while (fgets(baris, sizeof(baris), fp)) {
+            if (strstr(baris, kataCari) != NULL) {
+                printf("DITEMUKAN: %s", baris);
+                ditemukan++;
             }
         }
         
-        if (found == 0) {
-            printf("❌ No items found matching '%s'.\n", searchTerm);
+        if (ditemukan == 0) {
+            printf("Tidak ada item yang ditemukan untuk '%s'.\n", kataCari);
         } else {
-            printf("\n📊 Found %d item(s) matching '%s'.\n", found, searchTerm);
+            printf("\nDitemukan %d item yang cocok dengan '%s'.\n", ditemukan, kataCari);
         }
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void generateInventoryReport() {
-    clearScreen();
-    displayHeader("INVENTORY REPORT");
+void buatLaporanInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("LAPORAN INVENTARIS");
     
-    FILE *fp = fopen(FILENAME_INVENTORY, "r");
+    FILE *fp = fopen(FILE_INVENTARIS, "r");
     if (fp == NULL) {
-        printf("❌ No inventory data available.\n");
+        printf("Data inventaris tidak tersedia.\n");
     } else {
-        char line[256];
-        int totalItems = 0;
-        float totalValue = 0.0;
+        char baris[256];
+        int totalItem = 0;
+        float nilaiTotal = 0.0;
         
-        printf("📊 DETAILED INVENTORY REPORT\n");
-        char currentDate[MAX_STRING_LENGTH];
-        getCurrentDate(currentDate);
-        printf("📅 Generated on: %s\n", currentDate);
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("LAPORAN INVENTARIS DETAIL\n");
+        char tanggalSaatIni[PANJANG_STRING_MAX];
+        dapatkanTanggalSaatIni(tanggalSaatIni);
+        printf("Dibuat pada: %s\n", tanggalSaatIni);
+        printf("════════════════════════════════════════════════════════════\n");
         
-        while (fgets(line, sizeof(line), fp)) {
-            totalItems++;
-            printf("%s", line);
+        while (fgets(baris, sizeof(baris), fp)) {
+            totalItem++;
+            printf("%s", baris);
             
-            // Extract price and quantity for total value calculation
-            char *priceStr = strstr(line, "Price: $");
-            if (priceStr) {
-                float price;
-                if (sscanf(priceStr, "Price: $%f", &price) == 1) {
-                    char *qtyStr = strstr(line, "Quantity: ");
-                    if (qtyStr) {
-                        int qty;
-                        if (sscanf(qtyStr, "Quantity: %d", &qty) == 1) {
-                            totalValue += price * qty;
+            // Ekstrak harga dan jumlah untuk kalkulasi nilai total
+            char *stringHarga = strstr(baris, "Harga: Rp");
+            if (stringHarga) {
+                float harga;
+                if (sscanf(stringHarga, "Harga: Rp%f", &harga) == 1) {
+                    char *stringJumlah = strstr(baris, "Jumlah: ");
+                    if (stringJumlah) {
+                        int jumlah;
+                        if (sscanf(stringJumlah, "Jumlah: %d", &jumlah) == 1) {
+                            nilaiTotal += harga * jumlah;
                         }
                     }
                 }
             }
         }
         
-        printf("════════════════════════════════════════════════════════════════\n");
-        printf("📦 Total Items: %d\n", totalItems);
-        printf("💰 Total Inventory Value: $%.2f\n", totalValue);
-        printf("📈 Average Item Value: $%.2f\n", totalItems > 0 ? totalValue / totalItems : 0);
+        printf("════════════════════════════════════════════════════════════\n");
+        printf("Total Item: %d\n", totalItem);
+        printf("Nilai Total Inventaris: Rp%.2f\n", nilaiTotal);
+        printf("Rata-rata Nilai Item: Rp%.2f\n", totalItem > 0 ? nilaiTotal / totalItem : 0);
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void checkAlerts() {
-    clearScreen();
-    displayHeader("ALERTS & NOTIFICATIONS");
+void cekNotifikasi() {
+    bersihkanLayar();
+    tampilkanHeader("NOTIFIKASI & PERINGATAN");
     
-    FILE *fp = fopen(FILENAME_ALERTS, "r");
+    FILE *fp = fopen(FILE_NOTIFIKASI, "r");
     if (fp == NULL) {
-        printf("✅ No alerts at this time.\n");
-        printf("🌱 Your greenhouse system is running smoothly!\n");
+        printf("Tidak ada notifikasi saat ini.\n");
+        printf("Sistem greenhouse Anda berjalan dengan lancar!\n");
     } else {
-        char timestamp[MAX_STRING_LENGTH], type[MAX_STRING_LENGTH], message[MAX_STRING_LENGTH];
-        int priority;
-        int alertCount = 0;
+        char waktu[PANJANG_STRING_MAX], jenis[PANJANG_STRING_MAX], pesan[PANJANG_STRING_MAX];
+        int prioritas;
+        int jumlahNotifikasi = 0;
         
-        printf("🔔 SYSTEM ALERTS:\n");
-        printf("════════════════════════════════════════════════════════════════\n");
+        printf("NOTIFIKASI SISTEM:\n");
+        printf("════════════════════════════════════════════════════════════\n");
         
-        while (fscanf(fp, "%[^|]|%[^|]|%[^|]|%d\n", timestamp, type, message, priority) == 4) {
-            alertCount++;
-            char priorityIcon[10];
-            char priorityColor[20];
+        while (fscanf(fp, "%[^|]|%[^|]|%[^|]|%d\n", waktu, jenis, pesan, prioritas) == 4) {
+            jumlahNotifikasi++;
+            char ikonPrioritas[10];
+            char warnaPrioritas[20];
             
-            switch(priority) {
+            switch(prioritas) {
                 case 3: 
-                    strcpy(priorityIcon, "🚨"); 
-                    strcpy(priorityColor, "\033[1;31m"); 
+                    strcpy(ikonPrioritas, "[KRITIS]"); 
+                    strcpy(warnaPrioritas, ""); 
                     break;
                 case 2: 
-                    strcpy(priorityIcon, "⚠️"); 
-                    strcpy(priorityColor, "\033[1;33m"); 
+                    strcpy(ikonPrioritas, "[PENTING]"); 
+                    strcpy(warnaPrioritas, ""); 
                     break;
                 default: 
-                    strcpy(priorityIcon, "ℹ️"); 
-                    strcpy(priorityColor, "\033[1;36m"); 
+                    strcpy(ikonPrioritas, "[INFO]"); 
+                    strcpy(warnaPrioritas, ""); 
                     break;
             }
             
-            printf("%s %s[%s] %s: %s\033[0m\n", 
-                   priorityIcon, priorityColor, type, timestamp, message);
+            printf("%s [%s] %s: %s\n", 
+                   ikonPrioritas, jenis, waktu, pesan);
         }
         
-        if (alertCount == 0) {
-            printf("✅ No alerts found.\n");
+        if (jumlahNotifikasi == 0) {
+            printf("Tidak ada notifikasi ditemukan.\n");
         } else {
-            printf("\n📊 Total alerts: %d\n", alertCount);
+            printf("\nTotal notifikasi: %d\n", jumlahNotifikasi);
         }
         
         fclose(fp);
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-// Placeholder implementations for remaining functions
-void deleteInventoryItem() {
-    clearScreen();
-    displayHeader("REMOVE EQUIPMENT");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+// Implementasi fungsi placeholder yang tersisa
+void hapusItemInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("HAPUS PERALATAN");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void lowStockAlert() {
-    clearScreen();
-    displayHeader("LOW STOCK ALERTS");
-    printf("⚠️  Checking inventory levels...\n");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+void notifikasiStokRendah() {
+    bersihkanLayar();
+    tampilkanHeader("PERINGATAN STOK RENDAH");
+    printf("Memeriksa tingkat inventaris...\n");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void inventoryStatistics() {
-    clearScreen();
-    displayHeader("INVENTORY ANALYTICS");
-    printf("📈 Generating usage statistics...\n");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+void statistikInventaris() {
+    bersihkanLayar();
+    tampilkanHeader("ANALISIS INVENTARIS");
+    printf("Membuat statistik penggunaan...\n");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void exportData() {
-    clearScreen();
-    displayHeader("EXPORT DATA");
-    printf("📤 Exporting system data...\n");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+void eksporData() {
+    bersihkanLayar();
+    tampilkanHeader("EKSPOR DATA");
+    printf("Mengekspor data sistem...\n");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void importData() {
-    clearScreen();
-    displayHeader("IMPORT DATA");
-    printf("📥 Importing system data...\n");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+void imporData() {
+    bersihkanLayar();
+    tampilkanHeader("IMPOR DATA");
+    printf("Mengimpor data sistem...\n");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
 void backupData() {
-    clearScreen();
-    displayHeader("BACKUP SYSTEM");
-    printf("💾 Creating system backup...\n");
-    printf("🚧 This feature is under development.\n");
-    pressEnterToContinue();
+    bersihkanLayar();
+    tampilkanHeader("BACKUP SISTEM");
+    printf("Membuat cadangan sistem...\n");
+    printf("Fitur ini sedang dalam pengembangan.\n");
+    tekanEnterUntukLanjut();
 }
 
-void clearAlerts() {
-    clearScreen();
-    displayHeader("CLEAR ALERTS");
+void hapusNotifikasi() {
+    bersihkanLayar();
+    tampilkanHeader("HAPUS NOTIFIKASI");
     
-    char choice;
-    printf("⚠️  Are you sure you want to clear all alerts? (y/N): ");
-    scanf(" %c", &choice);
+    char pilihan;
+    printf("Apakah Anda yakin ingin menghapus semua notifikasi? (y/T): ");
+    scanf(" %c", &pilihan);
     
-    if (choice == 'y' || choice == 'Y') {
-        FILE *fp = fopen(FILENAME_ALERTS, "w");
+    if (pilihan == 'y' || pilihan == 'Y') {
+        FILE *fp = fopen(FILE_NOTIFIKASI, "w");
         if (fp != NULL) {
             fclose(fp);
-            printf("✅ All alerts have been cleared.\n");
+            printf("Semua notifikasi telah dihapus.\n");
         } else {
-            printf("❌ Error clearing alerts.\n");
+            printf("Error saat menghapus notifikasi.\n");
         }
     } else {
-        printf("🔙 Operation cancelled.\n");
+        printf("Operasi dibatalkan.\n");
     }
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }
 
-void aboutSystem() {
-    clearScreen();
-    displayHeader("ABOUT GREENHOUSE MONITORING SYSTEM");
+void tentangSistem() {
+    bersihkanLayar();
+    tampilkanHeader("TENTANG SISTEM MONITORING GREENHOUSE");
     
-    printf("🌱 \033[1;32mGreenhouse Monitoring System ITTS v2.0\033[0m\n");
-    printf("════════════════════════════════════════════════════════════════\n");
-    printf("🎯 Purpose: Advanced greenhouse management and monitoring\n");
-    printf("👨‍💻 Developer: ITTS Development Team\n");
-    printf("📅 Version: 2.0 Enhanced Edition\n");
-    printf("🗓️  Release Date: July 2025\n");
-    printf("💻 Platform: Cross-platform (Windows, Linux, macOS)\n");
-    printf("📝 Language: C (C99 Standard)\n");
+    printf("SISTEM MONITORING GREENHOUSE ITTS v2.0\n");
+    printf("════════════════════════════════════════════════════════════\n");
+    printf("Tujuan: Manajemen dan monitoring greenhouse tingkat lanjut\n");
+    printf("Developer: Tim Pengembangan ITTS\n");
+    printf("Versi: 2.0 Edisi Lengkap\n");
+    printf("Tanggal Rilis: Juli 2025\n");
+    printf("Platform: Multi-platform (Windows, Linux, macOS)\n");
+    printf("Bahasa: C (Standar C99)\n");
     printf("\n");
-    printf("🌟 \033[1;33mKey Features:\033[0m\n");
-    printf("════════════════════════════════════════════════════════════════\n");
-    printf("🔬 Real-time plant health monitoring\n");
-    printf("💧 Comprehensive watering management\n");
-    printf("📊 Advanced plant statistics and analytics\n");
-    printf("🔧 Complete equipment inventory system\n");
-    printf("🔔 Smart alert and notification system\n");
-    printf("⚙️  Data export and backup capabilities\n");
-    printf("🎨 User-friendly colorful interface\n");
-    printf("🛡️  Robust error handling and validation\n");
+    printf("FITUR UTAMA:\n");
+    printf("════════════════════════════════════════════════════════════\n");
+    printf("- Monitoring kesehatan tanaman real-time\n");
+    printf("- Manajemen penyiraman komprehensif\n");
+    printf("- Statistik dan analisis tanaman lanjutan\n");
+    printf("- Sistem inventaris peralatan lengkap\n");
+    printf("- Sistem notifikasi dan peringatan cerdas\n");
+    printf("- Kemampuan ekspor dan backup data\n");
+    printf("- Interface yang ramah pengguna\n");
+    printf("- Penanganan error yang kuat dan validasi\n");
     printf("\n");
-    printf("📞 \033[1;36mSupport:\033[0m\n");
-    printf("════════════════════════════════════════════════════════════════\n");
-    printf("📧 Email: support@itts-greenhouse.com\n");
-    printf("🌐 Website: https://github.com/KangFeeder090403/Greenhouse-Monitoring-System-ITTS\n");
-    printf("📖 Documentation: Available in README.md\n");
+    printf("DUKUNGAN:\n");
+    printf("════════════════════════════════════════════════════════════\n");
+    printf("Email: dukungan@itts-greenhouse.com\n");
+    printf("Website: https://github.com/KangFeeder090403/Greenhouse-Monitoring-System-ITTS\n");
+    printf("Dokumentasi: Tersedia di README.md\n");
     printf("\n");
-    printf("🙏 \033[1;35mThank you for using our system!\033[0m\n");
-    printf("🌱 Happy greenhouse monitoring! 🌿\n");
+    printf("Terima kasih telah menggunakan sistem kami!\n");
+    printf("Selamat monitoring greenhouse!\n");
     
-    pressEnterToContinue();
+    tekanEnterUntukLanjut();
 }

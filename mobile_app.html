@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenhouse Monitor Mobile - ITTS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.15);
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sensor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sensor-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .sensor-status {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-normal { background: #27ae60; }
+        .status-warning { background: #f39c12; }
+        .status-danger { background: #e74c3c; }
+
+        .sensor-value {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .sensor-time {
+            text-align: center;
+            opacity: 0.7;
+            font-size: 12px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .refresh-btn {
+            grid-column: span 2;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success { background: #27ae60; }
+        .notification.warning { background: #f39c12; }
+        .notification.danger { background: #e74c3c; }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .mini-chart {
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            display: flex;
+            align-items: end;
+            padding: 5px;
+            gap: 2px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #3498db, #9b59b6);
+            border-radius: 2px;
+            min-height: 10px;
+        }
+
+        .offline-mode {
+            background: rgba(231, 76, 60, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .sensor-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Greenhouse Monitor</h1>
+            <p>Institut Teknologi Telkom Surabaya</p>
+            <p id="last-update">Terakhir update: --</p>
+        </div>
+
+        <div id="offline-indicator" class="offline-mode" style="display: none;">
+            📡 Mode Offline - Mencoba menghubungkan...
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Memuat data sensor...</p>
+        </div>
+
+        <div id="sensor-data" style="display: none;">
+            <!-- Suhu -->
+            <div class="status-card">
+                <div class="sensor-header">
+                    <span class="sensor-name">🌡️ Suhu</span>
+                    <span id="temp-status" class="sensor-status status-normal">Normal</span>
+                </div>
+                <div id="temp-value" class="sensor-value">--°C</div>
+                <div class="sensor-time">Optimal: 20-30°C</div>
+            </div>
+
+            <!-- Kelembaban Udara -->
+            <div class="status-card">
+                <div class="sensor-header">
+                    <span class="sensor-name">💧 Kelembaban Udara</span>
+                    <span id="humidity-status" class="sensor-status status-normal">Normal</span>
+                </div>
+                <div id="humidity-value" class="sensor-value">--%</div>
+                <div class="sensor-time">Optimal: 60-80%</div>
+            </div>
+
+            <!-- Kelembaban Tanah -->
+            <div class="status-card">
+                <div class="sensor-header">
+                    <span class="sensor-name">🌱 Kelembaban Tanah</span>
+                    <span id="soil-status" class="sensor-status status-normal">Normal</span>
+                </div>
+                <div id="soil-value" class="sensor-value">--%</div>
+                <div class="sensor-time">Optimal: 40-70%</div>
+            </div>
+
+            <!-- Intensitas Cahaya -->
+            <div class="status-card">
+                <div class="sensor-header">
+                    <span class="sensor-name">☀️ Intensitas Cahaya</span>
+                    <span id="light-status" class="sensor-status status-normal">Normal</span>
+                </div>
+                <div id="light-value" class="sensor-value">-- lux</div>
+                <div class="sensor-time">Optimal: 500-2000 lux</div>
+            </div>
+
+            <!-- Chart Mini -->
+            <div class="chart-container">
+                <div class="chart-title">📊 Tren 24 Jam Terakhir</div>
+                <div class="mini-chart" id="mini-chart">
+                    <!-- Chart bars akan di-generate oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn" onclick="exportData()">📊 Ekspor</button>
+                <button class="btn" onclick="showAlerts()">🔔 Alert</button>
+                <button class="btn refresh-btn" onclick="refreshData()">🔄 Refresh Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let isOnline = true;
+        let chartData = [];
+        
+        // API Base URL
+        const API_BASE = 'http://localhost:8080';
+        
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            generateMockChart();
+            
+            // Auto refresh setiap 30 detik
+            setInterval(loadData, 30000);
+            
+            // Service Worker untuk offline support
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(console.error);
+            }
+        });
+        
+        // Load data dari server
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/sensor`);
+                
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                
+                const data = await response.json();
+                updateUI(data);
+                setOnlineStatus(true);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                setOnlineStatus(false);
+                loadOfflineData();
+            }
+        }
+        
+        // Update UI dengan data sensor
+        function updateUI(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('sensor-data').style.display = 'block';
+            
+            // Update nilai sensor
+            document.getElementById('temp-value').textContent = `${data.suhu.toFixed(1)}°C`;
+            document.getElementById('humidity-value').textContent = `${data.kelembaban.toFixed(1)}%`;
+            document.getElementById('soil-value').textContent = `${data.kelembaban_tanah.toFixed(1)}%`;
+            document.getElementById('light-value').textContent = `${data.cahaya.toFixed(0)} lux`;
+            
+            // Update status
+            updateStatus('temp', data.suhu, 20, 30);
+            updateStatus('humidity', data.kelembaban, 60, 80);
+            updateStatus('soil', data.kelembaban_tanah, 40, 70);
+            updateStatus('light', data.cahaya, 500, 2000);
+            
+            // Update waktu
+            document.getElementById('last-update').textContent = 
+                `Terakhir update: ${new Date(data.waktu).toLocaleTimeString()}`;
+            
+            // Simpan data untuk offline
+            localStorage.setItem('lastSensorData', JSON.stringify(data));
+            
+            // Update chart
+            updateChart(data);
+        }
+        
+        // Update status sensor
+        function updateStatus(sensor, value, min, max) {
+            const statusElement = document.getElementById(`${sensor}-status`);
+            
+            if (value >= min && value <= max) {
+                statusElement.textContent = 'Normal';
+                statusElement.className = 'sensor-status status-normal';
+            } else if (value < min * 0.8 || value > max * 1.2) {
+                statusElement.textContent = 'Bahaya';
+                statusElement.className = 'sensor-status status-danger';
+                showNotification(`${sensor} dalam kondisi bahaya!`, 'danger');
+            } else {
+                statusElement.textContent = 'Peringatan';
+                statusElement.className = 'sensor-status status-warning';
+            }
+        }
+        
+        // Set status online/offline
+        function setOnlineStatus(online) {
+            isOnline = online;
+            const offlineIndicator = document.getElementById('offline-indicator');
+            offlineIndicator.style.display = online ? 'none' : 'block';
+        }
+        
+        // Load data offline dari localStorage
+        function loadOfflineData() {
+            const lastData = localStorage.getItem('lastSensorData');
+            if (lastData) {
+                const data = JSON.parse(lastData);
+                updateUI(data);
+                showNotification('Menggunakan data offline', 'warning');
+            }
+        }
+        
+        // Generate mock chart data
+        function generateMockChart() {
+            chartData = [];
+            for (let i = 0; i < 24; i++) {
+                chartData.push({
+                    hour: i,
+                    temp: 20 + Math.random() * 10,
+                    humidity: 60 + Math.random() * 20,
+                    soil: 40 + Math.random() * 30
+                });
+            }
+            renderChart();
+        }
+        
+        // Update chart dengan data baru
+        function updateChart(newData) {
+            const now = new Date();
+            const hour = now.getHours();
+            
+            if (chartData.length >= 24) {
+                chartData.shift();
+            }
+            
+            chartData.push({
+                hour: hour,
+                temp: newData.suhu,
+                humidity: newData.kelembaban,
+                soil: newData.kelembaban_tanah
+            });
+            
+            renderChart();
+        }
+        
+        // Render mini chart
+        function renderChart() {
+            const chartContainer = document.getElementById('mini-chart');
+            chartContainer.innerHTML = '';
+            
+            chartData.forEach(data => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${(data.temp / 40) * 100}%`;
+                bar.title = `${data.hour}:00 - ${data.temp.toFixed(1)}°C`;
+                chartContainer.appendChild(bar);
+            });
+        }
+        
+        // Refresh data manual
+        function refreshData() {
+            showNotification('Memperbarui data...', 'success');
+            loadData();
+        }
+        
+        // Ekspor data
+        function exportData() {
+            if (!isOnline) {
+                showNotification('Ekspor data memerlukan koneksi internet', 'warning');
+                return;
+            }
+            
+            showNotification('Mengunduh laporan...', 'success');
+            window.open(`${API_BASE}/api/export`, '_blank');
+        }
+        
+        // Tampilkan alert
+        function showAlerts() {
+            const alerts = [
+                'Kelembaban tanah rendah pada Bedeng A',
+                'Suhu optimal tercapai',
+                'Sistem berjalan normal'
+            ];
+            
+            const alertText = alerts.join('\n');
+            alert('🔔 Notifikasi Terbaru:\n\n' + alertText);
+        }
+        
+        // Tampilkan notifikasi
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // PWA Support
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallPrompt();
+        });
+        
+        function showInstallPrompt() {
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Install App';
+            installBtn.className = 'btn';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    installBtn.remove();
+                }
+            };
+            
+            document.querySelector('.controls').appendChild(installBtn);
+        }
+        
+        // Handle network status
+        window.addEventListener('online', () => {
+            setOnlineStatus(true);
+            showNotification('Koneksi tersambung kembali', 'success');
+            loadData();
+        });
+        
+        window.addEventListener('offline', () => {
+            setOnlineStatus(false);
+            showNotification('Koneksi terputus', 'warning');
+        });
+    </script>
+</body>
+</html>

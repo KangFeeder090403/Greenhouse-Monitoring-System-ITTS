@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include "greenhouse_advanced_features.h"
 
 // Konstanta sistem
 #define PANJANG_STRING_MAX 100
@@ -95,6 +96,30 @@ void bersihkanString(char *str);
 
 int main() {
     int pilihan;
+    HANDLE threadMonitoring = NULL;
+    
+    // Inisialisasi sistem advanced
+    printf("Menginisialisasi Sistem Greenhouse Advanced...\n");
+    
+    if (inisialisasiDatabase() != 0) {
+        printf("Peringatan: Database tidak dapat diinisialisasi. Menggunakan mode file.\n");
+    }
+    
+    if (inisialisasiSensor() != 0) {
+        printf("Peringatan: Sistem sensor tidak dapat diinisialisasi.\n");
+    }
+    
+    if (inisialisasiJaringan() != 0) {
+        printf("Peringatan: Jaringan tidak dapat diinisialisasi. Fitur web disabled.\n");
+    } else {
+        printf("Memulai web server...\n");
+        if (mulaiWebServer(WEB_PORT) == 0) {
+            printf("Web dashboard tersedia di: http://localhost:%d\n", WEB_PORT);
+        }
+    }
+    
+    // Mulai monitoring otomatis
+    threadMonitoring = mulaiMonitoringOtomatis();
     
     tampilkanLayarSelamatDatang();
     
@@ -102,7 +127,7 @@ int main() {
         bersihkanLayar();
         tampilkanMenuUtama();
         
-        printf("Masukkan pilihan Anda (1-5): ");
+        printf("Masukkan pilihan Anda (1-8): ");
         if (scanf("%d", &pilihan) != 1) {
             printf("Input tidak valid! Harap masukkan angka.\n");
             while (getchar() != '\n'); // Bersihkan buffer input
@@ -177,11 +202,34 @@ int main() {
             }
             
             case 3:
+                // Monitoring Sensor Real-time
+                tampilkanStatusSensor();
+                tekanEnterUntukLanjut();
+                break;
+                
+            case 4:
                 // Notifikasi dan Peringatan
                 cekNotifikasi();
                 break;
                 
-            case 4: {
+            case 5:
+                // Dashboard Web
+                printf("\nDashboard Web tersedia di: http://localhost:%d\n", WEB_PORT);
+                printf("Buka browser dan akses alamat tersebut untuk monitoring real-time.\n");
+                printf("Fitur dashboard:\n");
+                printf("- Monitoring sensor real-time\n");
+                printf("- Grafik data historis\n");
+                printf("- Kontrol sistem jarak jauh\n");
+                printf("- Notifikasi push\n");
+                tekanEnterUntukLanjut();
+                break;
+                
+            case 6:
+                // Ekspor dan Laporan
+                menuEksporData();
+                break;
+                
+            case 7: {
                 // Pengaturan Sistem
                 int pilihanPengaturan;
                 do {
@@ -211,17 +259,26 @@ int main() {
                 break;
             }
             
-            case 5:
+            case 8:
                 printf("\nTerima kasih telah menggunakan Sistem Monitoring Greenhouse!\n");
                 printf("Semoga tanaman Anda selalu sehat dan subur!\n");
                 printf("Sampai jumpa!\n\n");
+                
+                // Cleanup sistem
+                if (threadMonitoring) {
+                    TerminateThread(threadMonitoring, 0);
+                    CloseHandle(threadMonitoring);
+                }
+                tutupWebServer();
+                tutupDatabase();
+                
                 break;
                 
             default:
-                printf("Pilihan tidak valid! Masukkan angka antara 1-5.\n");
+                printf("Pilihan tidak valid! Masukkan angka antara 1-8.\n");
                 tekanEnterUntukLanjut();
         }
-    } while (pilihan != 5);
+    } while (pilihan != 8);
     
     return 0;
 }
@@ -256,9 +313,12 @@ void tampilkanMenuUtama() {
     tampilkanHeader("MENU UTAMA");
     printf("1. Manajemen Tanaman       - Pantau dan rawat tanaman Anda\n");
     printf("2. Manajemen Peralatan     - Kelola alat dan perlengkapan\n");
-    printf("3. Notifikasi & Peringatan - Lihat pemberitahuan sistem\n");
-    printf("4. Pengaturan Sistem       - Konfigurasi dan perawatan\n");
-    printf("5. Keluar                  - Tutup aplikasi\n");
+    printf("3. Monitoring Sensor       - Data sensor real-time\n");
+    printf("4. Notifikasi & Peringatan - Lihat pemberitahuan sistem\n");
+    printf("5. Dashboard Web           - Akses monitoring web\n");
+    printf("6. Ekspor & Laporan        - Ekspor data dan laporan\n");
+    printf("7. Pengaturan Sistem       - Konfigurasi dan perawatan\n");
+    printf("8. Keluar                  - Tutup aplikasi\n");
     printf("═══════════════════════════════════════════════════════════\n");
 }
 

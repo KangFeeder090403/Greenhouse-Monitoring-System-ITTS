@@ -1,0 +1,189 @@
+# Makefile untuk Sistem Monitoring Greenhouse Advanced ITTS
+# Mendukung kompilasi dengan SQLite, networking, dan sensor
+
+# Compiler dan flag
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -O2 -I.
+DEBUG_FLAGS = -g -DDEBUG
+LIBS = -lsqlite3 -lws2_32 -lm
+
+# Target dan source files
+TARGET = greenhouse_advanced
+SOURCES = greenhouse_system_advanced.c database_functions.c network_functions.c sensor_functions.c export_notification.c
+HEADERS = greenhouse_advanced_features.h
+OBJECTS = $(SOURCES:.c=.o)
+
+# Direktori
+BUILDDIR = build
+EXPORTDIR = exports
+BACKUPDIR = backup
+
+# Target utama
+all: directories $(TARGET)
+	@echo "✅ Kompilasi berhasil! Program: $(TARGET).exe"
+	@echo "🌱 Jalankan dengan: ./$(TARGET).exe"
+	@echo "🌐 Dashboard web di: http://localhost:8080"
+
+# Buat direktori yang diperlukan
+directories:
+	@if not exist "$(BUILDDIR)" mkdir "$(BUILDDIR)" 2>nul || echo Direktori build sudah ada
+	@if not exist "$(EXPORTDIR)" mkdir "$(EXPORTDIR)" 2>nul || echo Direktori exports sudah ada
+	@if not exist "$(BACKUPDIR)" mkdir "$(BACKUPDIR)" 2>nul || echo Direktori backup sudah ada
+
+# Kompilasi program utama
+$(TARGET): $(OBJECTS)
+	@echo "🔗 Linking program..."
+	$(CC) $(OBJECTS) -o $(TARGET).exe $(LIBS)
+
+# Kompilasi file objek individual
+greenhouse_system_advanced.o: greenhouse_system_advanced.c $(HEADERS)
+	@echo "🔨 Compiling main system..."
+	$(CC) $(CFLAGS) -c greenhouse_system_advanced.c
+
+database_functions.o: database_functions.c $(HEADERS)
+	@echo "🗄️ Compiling database functions..."
+	$(CC) $(CFLAGS) -c database_functions.c
+
+network_functions.o: network_functions.c $(HEADERS)
+	@echo "🌐 Compiling network functions..."
+	$(CC) $(CFLAGS) -c network_functions.c
+
+sensor_functions.o: sensor_functions.c $(HEADERS)
+	@echo "📡 Compiling sensor functions..."
+	$(CC) $(CFLAGS) -c sensor_functions.c
+
+export_notification.o: export_notification.c $(HEADERS)
+	@echo "📊 Compiling export and notification functions..."
+	$(CC) $(CFLAGS) -c export_notification.c
+
+# Target untuk debugging
+debug: CFLAGS += $(DEBUG_FLAGS)
+debug: clean $(TARGET)
+	@echo "🐛 Debug build completed"
+
+# Target untuk release
+release: CFLAGS += -DNDEBUG -O3
+release: clean $(TARGET)
+	@echo "🚀 Release build completed"
+
+# Jalankan program
+run: $(TARGET)
+	@echo "▶️ Menjalankan Greenhouse Monitoring System..."
+	./$(TARGET).exe
+
+# Quick build dan run
+quick: clean $(TARGET) run
+
+# Test basic functionality
+test: $(TARGET)
+	@echo "🧪 Running basic tests..."
+	@echo "Test 1: Database initialization"
+	@echo "Test 2: Sensor simulation"
+	@echo "Test 3: Network connectivity"
+	@echo "All tests simulated - run program for full testing"
+
+# Install dependencies (informasi saja)
+deps:
+	@echo "📦 Dependencies required:"
+	@echo "  - SQLite3 development libraries"
+	@echo "  - Windows Socket library (built-in)"
+	@echo "  - GCC compiler with C99 support"
+	@echo ""
+	@echo "Windows: Download SQLite3 DLL dari https://sqlite.org/download.html"
+	@echo "Linux: sudo apt-get install libsqlite3-dev"
+	@echo "MSYS2: pacman -S mingw-w64-x86_64-sqlite3"
+
+# Backup source code
+backup:
+	@echo "💾 Creating backup..."
+	@for /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c%%a%%b)
+	@for /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
+	@if not exist "$(BACKUPDIR)" mkdir "$(BACKUPDIR)"
+	@tar -czf "$(BACKUPDIR)/greenhouse_backup_%mydate%_%mytime%.tar.gz" *.c *.h *.txt *.md Makefile build.bat 2>nul || echo Backup created manually
+	@echo "Backup created in $(BACKUPDIR)/"
+
+# Clean build files
+clean:
+	@echo "🧹 Cleaning build files..."
+	@if exist "*.o" del /q *.o 2>nul
+	@if exist "$(TARGET).exe" del /q "$(TARGET).exe" 2>nul
+	@echo "Clean completed"
+
+# Deep clean including generated files
+distclean: clean
+	@echo "🗑️ Deep cleaning..."
+	@if exist "greenhouse_data.db" del /q "greenhouse_data.db" 2>nul
+	@if exist "$(BUILDDIR)" rmdir /s /q "$(BUILDDIR)" 2>nul
+	@if exist "exports\*.csv" del /q "exports\*.csv" 2>nul
+	@if exist "exports\*.txt" del /q "exports\*.txt" 2>nul
+	@echo "Deep clean completed"
+
+# Create distribution package
+package: clean release
+	@echo "📦 Creating distribution package..."
+	@set "PACKAGE_NAME=greenhouse_monitoring_advanced"
+	@mkdir "%PACKAGE_NAME%" 2>nul
+	@copy "$(TARGET).exe" "%PACKAGE_NAME%\" >nul
+	@copy "*.txt" "%PACKAGE_NAME%\" 2>nul
+	@copy "*.md" "%PACKAGE_NAME%\" 2>nul
+	@copy "build.bat" "%PACKAGE_NAME%\" 2>nul
+	@echo "Package created: %PACKAGE_NAME%/"
+
+# Install to system (requires admin)
+install: $(TARGET)
+	@echo "⚡ Installing to system..."
+	@if not exist "C:\Program Files\GreenhouseMonitoring" mkdir "C:\Program Files\GreenhouseMonitoring"
+	@copy "$(TARGET).exe" "C:\Program Files\GreenhouseMonitoring\" >nul
+	@copy "*.txt" "C:\Program Files\GreenhouseMonitoring\" 2>nul
+	@echo "Installation completed to C:\Program Files\GreenhouseMonitoring\"
+
+# Uninstall from system
+uninstall:
+	@echo "🗑️ Uninstalling from system..."
+	@if exist "C:\Program Files\GreenhouseMonitoring" rmdir /s /q "C:\Program Files\GreenhouseMonitoring"
+	@echo "Uninstallation completed"
+
+# Show help
+help:
+	@echo "🌱 Greenhouse Monitoring System - Build Help"
+	@echo "=============================================="
+	@echo ""
+	@echo "Available targets:"
+	@echo "  all       - Build complete system (default)"
+	@echo "  debug     - Build with debug symbols"
+	@echo "  release   - Build optimized release version"
+	@echo "  run       - Build and run the program"
+	@echo "  quick     - Quick clean, build, and run"
+	@echo "  test      - Run basic functionality tests"
+	@echo "  clean     - Remove build files"
+	@echo "  distclean - Remove all generated files"
+	@echo "  backup    - Create source code backup"
+	@echo "  package   - Create distribution package"
+	@echo "  install   - Install to system (requires admin)"
+	@echo "  uninstall - Remove from system"
+	@echo "  deps      - Show dependency information"
+	@echo "  help      - Show this help message"
+	@echo ""
+	@echo "Example usage:"
+	@echo "  make all         # Build everything"
+	@echo "  make run         # Build and run"
+	@echo "  make debug       # Debug build"
+	@echo "  make clean       # Clean build files"
+
+# Show project status
+status:
+	@echo "📊 Project Status"
+	@echo "=================="
+	@echo "Target: $(TARGET).exe"
+	@echo "Sources: $(SOURCES)"
+	@echo "Headers: $(HEADERS)"
+	@echo ""
+	@if exist "$(TARGET).exe" (echo "✅ Executable exists") else (echo "❌ Executable not found")
+	@if exist "greenhouse_data.db" (echo "✅ Database file exists") else (echo "❌ Database not initialized")
+	@if exist "$(EXPORTDIR)" (echo "✅ Export directory ready") else (echo "❌ Export directory missing")
+	@echo ""
+	@echo "Last compiled: "
+	@if exist "$(TARGET).exe" for %%i in ("$(TARGET).exe") do echo %%~ti
+
+# Phony targets
+.PHONY: all directories debug release run quick test deps backup clean distclean package install uninstall help status

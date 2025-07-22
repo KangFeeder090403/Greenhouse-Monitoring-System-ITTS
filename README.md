@@ -114,7 +114,6 @@ Greenhouse-Monitoring-System-ITTS/
 ├── README.md                     # Dokumentasi
 ├── DOCS.md                       # Dokumentasi teknis
 ├── SAMPLE_DATA.md               # Contoh data
-├── environment.yml              # Environment Conda (opsional)
 ├── data_inventaris.txt          # Data inventaris (generated)
 ├── tanggal_siram.txt           # Catatan penyiraman (generated)
 ├── data_tanaman.txt            # Statistik tanaman (generated)
@@ -185,39 +184,6 @@ Sistem ini menampilkan antarmuka yang intuitif dengan:
 - Notifikasi dan peringatan otomatis
 - Ekspor data ke CSV/Excel
 - Dukungan multi-bahasa
-
-## Kontribusi
-
-1. Fork repository
-2. Buat branch fitur (`git checkout -b feature/FiturMenarik`)
-3. Commit perubahan Anda (`git commit -m 'Tambah FiturMenarik'`)
-4. Push ke branch (`git push origin feature/FiturMenarik`)
-5. Buka Pull Request
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detail.
-
-## Pengembang
-
-**KangFeeder090403**
-- GitHub: [@KangFeeder090403](https://github.com/KangFeeder090403)
-- Email: dukungan@itts-greenhouse.com
-
-## Terima Kasih
-
-Terima kasih telah menggunakan Sistem Monitoring Greenhouse ITTS!
-Semoga sistem ini membantu Anda dalam mengelola greenhouse dengan lebih efektif.
-
----
-*Dibuat dengan cinta untuk komunitas greenhouse Indonesia*
-
-## 📞 Support
-
-If you have any questions or need help with the system, please:
-1. Check this README first
-2. Look through existing [Issues](https://github.com/KangFeeder090403/Greenhouse-Monitoring-System-ITTS/issues)
-3. Create a new issue if needed
 
 ---
 
